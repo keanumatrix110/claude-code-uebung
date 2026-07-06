@@ -19,3 +19,10 @@ python greet.py Welt
 ```bash
 python -m pytest
 ```
+
+## Budgetplaner
+
+Im Ordner [`budget-planner/`](./budget-planner) liegt eine eigenständige
+Web-App: ein Budgetplaner mit Dashboard, Budget-Kategorien, Diagrammen und
+Buchungsverwaltung. Siehe [`budget-planner/README.md`](./budget-planner/README.md)
+für Details.
