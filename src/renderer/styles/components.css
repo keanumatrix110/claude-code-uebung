@@ -69,10 +69,13 @@
   color: var(--color-accent);
 }
 
-.nav-item .nav-icon {
+.nav-icon {
   width: 17px;
   height: 17px;
   flex-shrink: 0;
+}
+
+.nav-item .nav-icon {
   opacity: 0.9;
 }
 

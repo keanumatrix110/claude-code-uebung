@@ -4,6 +4,8 @@ function Icon(props: SVGProps<SVGSVGElement>): JSX.Element {
   return (
     <svg
       viewBox="0 0 20 20"
+      width={17}
+      height={17}
       fill="none"
       stroke="currentColor"
       strokeWidth={1.6}
