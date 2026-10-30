@@ -2,7 +2,7 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
+    <meta name="viewport" content="width=1080, height=1920" />
     <script src="assets/gsap.min.js"></script>
     <style>
       @font-face { font-family: "Inter Display"; src: local("Inter Display"); font-weight: 100 900; }
@@ -19,13 +19,13 @@
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
-        width: 1920px; height: 1080px; overflow: hidden;
+        width: 1080px; height: 1920px; overflow: hidden;
         background: var(--ground);
       }
       #root {
         position: relative; width: 100%; height: 100%;
         font-family: var(--font-display); color: var(--ink);
-        background: radial-gradient(ellipse 120% 90% at 70% 40%, #0c1428 0%, #060912 55%, var(--ground) 100%);
+        background: radial-gradient(ellipse 140% 80% at 50% 55%, #0c1428 0%, #060912 55%, var(--ground) 100%);
         overflow: hidden;
       }
       .clip { position: absolute; inset: 0; }
@@ -38,7 +38,7 @@
 
       /* Erdhorizont */
       #earth {
-        position: absolute; left: 50%; top: 930px;
+        position: absolute; left: 50%; top: 1640px;
         width: 4200px; height: 4200px; margin-left: -2100px; border-radius: 50%;
         background:
           radial-gradient(circle at 50% 2%, rgba(120, 200, 255, 0.35) 0%, transparent 6%),
@@ -48,13 +48,13 @@
         box-shadow: 0 -18px 60px rgba(90, 170, 255, 0.45), 0 -2px 6px rgba(160, 220, 255, 0.7);
       }
       #flood {
-        position: absolute; left: 0; right: 0; bottom: 0; height: 260px;
+        position: absolute; left: 0; right: 0; bottom: 0; height: 420px;
         background: linear-gradient(to top, rgba(40, 130, 235, 0.9), rgba(60, 160, 255, 0.0));
         transform-origin: 50% 100%; opacity: 0;
       }
 
       /* Himmelskörper */
-      .body { position: absolute; left: 1340px; top: 450px; }
+      .body { position: absolute; left: 540px; top: 1170px; }
       .sphere { position: absolute; border-radius: 50%; transform: translate(-50%, -50%); }
 
       #moon .sphere {
@@ -75,7 +75,7 @@
         box-shadow: 0 0 18px rgba(200, 200, 190, 0.18);
       }
       #mars .sphere {
-        width: 470px; height: 470px;
+        width: 430px; height: 430px;
         background:
           radial-gradient(ellipse 30% 9% at 48% 7%, rgba(255, 245, 235, 0.9) 0%, transparent 100%),
           radial-gradient(ellipse 34% 12% at 42% 48%, rgba(90, 35, 20, 0.6) 0%, transparent 100%),
@@ -107,50 +107,50 @@
       #saturn .tilt { position: absolute; left: 0; top: 0; transform: rotate(-16deg); perspective: 2400px; }
       #saturn .tilt .ring { transform: translate(-50%, -50%) rotateX(76deg); }
 
-      /* Linkes Panel */
-      .panel { position: absolute; left: 120px; top: 150px; width: 700px; }
+      /* Panel oben (TikTok-Safe-Zone: rechts 140 px frei) */
+      .panel { position: absolute; left: 80px; top: 190px; width: 820px; }
       .kicker {
         font-family: var(--font-mono); font-size: 28px; letter-spacing: 0.2em;
         color: var(--accent); text-transform: uppercase;
       }
-      .name { font-size: 132px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; margin-top: 18px; }
-      .sub { font-size: 30px; color: var(--muted); margin-top: 14px; font-weight: 400; }
-      .headline { font-size: 86px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; margin-top: 22px; }
-      .stats { margin-top: 44px; border-top: 1px solid var(--line); }
+      .name { font-size: 150px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; margin-top: 18px; }
+      .sub { font-size: 36px; color: var(--muted); margin-top: 14px; font-weight: 400; }
+      .headline { font-size: 104px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; margin-top: 22px; }
+      .stats { margin-top: 36px; border-top: 1px solid var(--line); }
       .row {
         display: flex; justify-content: space-between; align-items: baseline;
-        padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 28px;
+        padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 32px;
       }
       .row .k { color: var(--muted); }
-      .row .v { font-family: var(--font-mono); font-size: 30px; font-weight: 500; }
+      .row .v { font-family: var(--font-mono); font-size: 34px; font-weight: 500; }
       .tide { padding: 18px 0 46px; border-bottom: 1px solid var(--line); }
-      .tide .top { display: flex; justify-content: space-between; font-size: 28px; }
+      .tide .top { display: flex; justify-content: space-between; font-size: 32px; }
       .tide .top .k { color: var(--muted); }
-      .tide .top .v { font-family: var(--font-mono); font-size: 30px; color: var(--accent); }
+      .tide .top .v { font-family: var(--font-mono); font-size: 34px; color: var(--accent); }
       .bar { position: relative; height: 12px; margin-top: 14px; background: rgba(255, 255, 255, 0.08); border-radius: 6px; }
       .bar .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--accent); transform-origin: 0 50%; }
       .bar .ref { position: absolute; top: -6px; bottom: -6px; left: 33.3%; width: 2px; background: var(--ink); opacity: 0.7; }
-      .bar .reflabel { position: absolute; top: 22px; left: 33.3%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 16px; color: var(--muted); }
-      .effect { margin-top: 48px; font-size: 34px; line-height: 1.3; font-weight: 500; padding-left: 22px; border-left: 4px solid var(--accent); }
+      .bar .reflabel { position: absolute; top: 22px; left: 33.3%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 20px; color: var(--muted); }
+      .effect { margin-top: 36px; font-size: 38px; line-height: 1.3; font-weight: 500; padding-left: 22px; border-left: 4px solid var(--accent); }
 
       /* Untertitel */
-      #captions { position: absolute; left: 0; right: 0; top: 856px; height: 70px; }
+      #captions { position: absolute; left: 0; right: 0; top: 1380px; height: 160px; }
       .cap {
-        position: absolute; left: 50%; top: 0; transform: translateX(-50%);
-        white-space: nowrap; font-size: 38px; font-weight: 500; opacity: 0;
-        padding: 10px 26px; border-radius: 12px; background: rgba(4, 6, 13, 0.62);
+        position: absolute; left: 80px; width: 820px; top: 0; text-align: center;
+        font-size: 54px; font-weight: 800; line-height: 1.15; opacity: 0; letter-spacing: -0.01em;
+        text-shadow: 0 3px 0 #000, 0 0 18px rgba(0, 0, 0, 0.9), 0 0 4px #000;
       }
 
       .note {
-        position: absolute; right: 60px; bottom: 34px; font-family: var(--font-mono);
-        font-size: 16px; color: var(--muted); letter-spacing: 0.08em;
+        position: absolute; left: 80px; top: 130px; font-family: var(--font-mono);
+        font-size: 20px; color: var(--muted); letter-spacing: 0.08em;
       }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60.5" data-width="1080" data-height="1920">
       <!-- Hintergrund: Sterne + Erde, den ganzen Film über -->
-      <div id="bg" class="clip" data-start="0" data-duration="60" data-track-index="0">
+      <div id="bg" class="clip" data-start="0" data-duration="60.5" data-track-index="0">
         <div id="stars"></div>
         <div id="moon" class="body"><div class="sphere"></div></div>
         <div id="ceres" class="body"><div class="sphere"></div></div>
@@ -232,7 +232,7 @@
       </div>
 
       <!-- Szene 5: Fazit -->
-      <div id="s5" class="clip" data-start="51.3" data-duration="8.7" data-track-index="1">
+      <div id="s5" class="clip" data-start="51.3" data-duration="9.2" data-track-index="1">
         <div class="panel">
           <div class="kicker">Fazit</div>
           <div class="headline">Unser Mond ist genau richtig.</div>
@@ -250,9 +250,10 @@
       <audio id="vo2" src="assets/voice/s2.mp3" data-start="7.4" data-duration="13.76" data-track-index="3"></audio>
       <audio id="vo3" src="assets/voice/s3.mp3" data-start="21.7" data-duration="13.12" data-track-index="3"></audio>
       <audio id="vo4" src="assets/voice/s4.mp3" data-start="35.4" data-duration="15.68" data-track-index="3"></audio>
+      <audio id="vo5" src="assets/voice/s5.mp3" data-start="51.3" data-duration="8.56" data-track-index="3"></audio>
 
       <!-- Untertitel (Sprechertext) -->
-      <div id="captions" class="clip" data-start="0" data-duration="60" data-track-index="2"></div>
+      <div id="captions" class="clip" data-start="0" data-duration="60.5" data-track-index="2"></div>
     </div>
 
     <script>
@@ -281,7 +282,7 @@
           "Tausendfach stärkere Gezeiten:",
           "Ozeane über den Kontinenten, Vulkane überall."
         ]],
-        [51.6, 59.4, [
+        [51.3, 59.9, [
           "Unser Mond ist also genau richtig:",
           "Er treibt die Gezeiten an und stabilisiert die Erdachse.",
           "Ein Tausch? Lieber nicht."
@@ -293,11 +294,11 @@
       const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
       const starsEl = document.getElementById("stars");
       const twinkle = [];
-      for (let i = 0; i < 260; i++) {
+      for (let i = 0; i < 340; i++) {
         const s = document.createElement("div");
         s.className = "star";
         const size = rnd() < 0.9 ? 1 + rnd() * 1.6 : 2.4 + rnd() * 1.6;
-        s.style.cssText = `left:${rnd() * 1920}px;top:${rnd() * 960}px;width:${size}px;height:${size}px;opacity:${0.25 + rnd() * 0.65}`;
+        s.style.cssText = `left:${rnd() * 1080}px;top:${rnd() * 1700}px;width:${size}px;height:${size}px;opacity:${0.25 + rnd() * 0.65}`;
         starsEl.appendChild(s);
         if (i % 7 === 0) twinkle.push(s);
       }
@@ -357,9 +358,9 @@
 
       out("#mars", 34.6);
       tl.to("#flood", { scaleY: 0, opacity: 0, duration: 0.8 }, 34.6);
-      tl.fromTo("#saturn", { x: 700, y: 80, scale: 0.25, opacity: 0, rotation: 0 },
-        { x: 420, y: 30, scale: 1, opacity: 1, duration: 3, ease: "power2.out", immediateRender: false }, 35.3);
-      tl.to("#saturn", { x: 360, y: 0, duration: 12, ease: "sine.inOut" }, 38.3);
+      tl.fromTo("#saturn", { x: 500, y: 120, scale: 0.25, opacity: 0, rotation: 0 },
+        { x: 330, y: 150, scale: 1, opacity: 1, duration: 3, ease: "power2.out", immediateRender: false }, 35.3);
+      tl.to("#saturn", { x: 290, y: 120, duration: 12, ease: "sine.inOut" }, 38.3);
       // Kamera-Beben + massive Flut bei Saturn
       tl.to("#flood", { opacity: 1, scaleY: 1.6, duration: 3, ease: "power2.inOut" }, 45.5);
       tl.to("#earth", { y: 6, duration: 0.12, yoyo: true, repeat: 23, ease: "sine.inOut" }, 47.0);
@@ -370,7 +371,7 @@
       tl.fromTo("#moon", { x: -200, y: 40, rotation: 0, opacity: 0, scale: 0.6 },
         { x: 0, y: 0, opacity: 1, scale: 1, duration: 1.8, ease: "power3.out", immediateRender: false }, 51.4);
       tl.to("#moon", { y: -12, duration: 6.5, ease: "sine.inOut" }, 53.2);
-      tl.to("#root", { opacity: 0, duration: 0.8, ease: "power1.in" }, 59.2);
+      tl.to("#root", { opacity: 0, duration: 0.5, ease: "power1.in" }, 60.0);
 
       // Panels: Einblenden der Inhalte
       [["#s1", 0.4], ["#s2", 7.6], ["#s3", 21.9], ["#s4", 35.6], ["#s5", 51.6]].forEach(([id, at]) => {
