@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter Display"; src: local("Inter Display"); font-weight: 100 900; }
+      @font-face { font-family: "Inter"; src: local("Inter"); font-weight: 100 900; }
+      @font-face { font-family: "JetBrains Mono"; src: local("JetBrains Mono"); font-weight: 100 800; }
+      :root {
+        --ground: #04060d;
+        --ink: #f3f1ea;
+        --muted: #b3bacb;
+        --accent: #ffcf6b;
+        --line: rgba(243, 241, 234, 0.16);
+        --font-display: "Inter Display", "Inter", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        position: relative; width: 100%; height: 100%;
+        font-family: var(--font-display); color: var(--ink);
+        background: radial-gradient(ellipse 120% 90% at 70% 40%, #0c1428 0%, #060912 55%, var(--ground) 100%);
+        overflow: hidden;
+      }
+      .clip { position: absolute; inset: 0; }
+      #s1, #s2, #s3, #s4, #s5 { z-index: 5; }
+      #captions { z-index: 6; }
+
+      /* Sterne */
+      #stars { position: absolute; inset: 0; }
+      .star { position: absolute; border-radius: 50%; background: #fff; }
+
+      /* Erdhorizont */
+      #earth {
+        position: absolute; left: 50%; top: 930px;
+        width: 4200px; height: 4200px; margin-left: -2100px; border-radius: 50%;
+        background:
+          radial-gradient(circle at 50% 2%, rgba(120, 200, 255, 0.35) 0%, transparent 6%),
+          radial-gradient(ellipse 9% 2% at 38% 1.4%, #2f6b3c 0%, transparent 100%),
+          radial-gradient(ellipse 7% 1.6% at 63% 1.8%, #3a6e3a 0%, transparent 100%),
+          radial-gradient(circle at 50% 0%, #1f5fa8 0%, #0d3270 4%, #061a3d 10%, #020814 30%);
+        box-shadow: 0 -18px 60px rgba(90, 170, 255, 0.45), 0 -2px 6px rgba(160, 220, 255, 0.7);
+      }
+      #flood {
+        position: absolute; left: 0; right: 0; bottom: 0; height: 260px;
+        background: linear-gradient(to top, rgba(40, 130, 235, 0.9), rgba(60, 160, 255, 0.0));
+        transform-origin: 50% 100%; opacity: 0;
+      }
+
+      /* Himmelskörper */
+      .body { position: absolute; left: 1340px; top: 450px; }
+      .sphere { position: absolute; border-radius: 50%; transform: translate(-50%, -50%); }
+
+      #moon .sphere {
+        width: 240px; height: 240px;
+        background:
+          radial-gradient(circle at 34% 40%, rgba(60, 60, 66, 0.55) 0 9%, transparent 10%),
+          radial-gradient(circle at 60% 30%, rgba(60, 60, 66, 0.45) 0 7%, transparent 8%),
+          radial-gradient(circle at 55% 62%, rgba(70, 70, 76, 0.5) 0 12%, transparent 13%),
+          radial-gradient(circle at 28% 66%, rgba(80, 80, 86, 0.35) 0 5%, transparent 6%),
+          radial-gradient(circle at 35% 30%, #e8e6df 0%, #b9b6ad 45%, #5d5b57 80%, #2a2928 100%);
+        box-shadow: 0 0 60px rgba(230, 230, 220, 0.25);
+      }
+      #ceres .sphere {
+        width: 66px; height: 66px;
+        background:
+          radial-gradient(circle at 46% 42%, #f4f4f0 0 5%, transparent 7%),
+          radial-gradient(circle at 35% 30%, #8a8780 0%, #5c5a55 50%, #24231f 100%);
+        box-shadow: 0 0 18px rgba(200, 200, 190, 0.18);
+      }
+      #mars .sphere {
+        width: 470px; height: 470px;
+        background:
+          radial-gradient(ellipse 30% 9% at 48% 7%, rgba(255, 245, 235, 0.9) 0%, transparent 100%),
+          radial-gradient(ellipse 34% 12% at 42% 48%, rgba(90, 35, 20, 0.6) 0%, transparent 100%),
+          radial-gradient(ellipse 18% 22% at 66% 62%, rgba(110, 45, 25, 0.5) 0%, transparent 100%),
+          radial-gradient(circle at 34% 32%, #f0a070 0%, #c4602f 40%, #7a2f14 75%, #2e1006 100%);
+        box-shadow: 0 0 80px rgba(220, 110, 60, 0.3);
+      }
+      #saturn .sphere {
+        width: 900px; height: 900px;
+        background:
+          radial-gradient(circle at 34% 30%, rgba(255, 250, 235, 0.25) 0%, transparent 45%),
+          radial-gradient(circle at 50% 50%, transparent 55%, rgba(10, 6, 2, 0.75) 100%),
+          linear-gradient(172deg, #e9d6a8 0%, #d9bd84 18%, #c9a56a 24%, #e3cc98 33%, #b98f57 44%, #dcc18c 52%, #c39b62 63%, #e0c793 72%, #a87f4c 84%, #6b4c2b 100%);
+      }
+      .ring {
+        position: absolute; left: 0; top: 0;
+        width: 2000px; height: 2000px; border-radius: 50%;
+        transform: translate(-50%, -50%) rotateX(76deg) rotateZ(-16deg);
+        background: radial-gradient(circle,
+          transparent 0 47%,
+          rgba(170, 140, 100, 0.35) 47.5% 52%,
+          rgba(225, 200, 155, 0.85) 52.5% 61%,
+          rgba(20, 15, 10, 0.2) 61.5% 63%,
+          rgba(205, 180, 140, 0.75) 63.5% 69%,
+          transparent 69.5%);
+      }
+      #saturn .ring.back { clip-path: inset(0 0 50% 0); }
+      #saturn .ring.front { clip-path: inset(50% 0 0 0); }
+      #saturn .tilt { position: absolute; left: 0; top: 0; transform: rotate(-16deg); perspective: 2400px; }
+      #saturn .tilt .ring { transform: translate(-50%, -50%) rotateX(76deg); }
+
+      /* Linkes Panel */
+      .panel { position: absolute; left: 120px; top: 150px; width: 700px; }
+      .kicker {
+        font-family: var(--font-mono); font-size: 28px; letter-spacing: 0.2em;
+        color: var(--accent); text-transform: uppercase;
+      }
+      .name { font-size: 132px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; margin-top: 18px; }
+      .sub { font-size: 30px; color: var(--muted); margin-top: 14px; font-weight: 400; }
+      .headline { font-size: 86px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; margin-top: 22px; }
+      .stats { margin-top: 44px; border-top: 1px solid var(--line); }
+      .row {
+        display: flex; justify-content: space-between; align-items: baseline;
+        padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 28px;
+      }
+      .row .k { color: var(--muted); }
+      .row .v { font-family: var(--font-mono); font-size: 30px; font-weight: 500; }
+      .tide { padding: 18px 0 46px; border-bottom: 1px solid var(--line); }
+      .tide .top { display: flex; justify-content: space-between; font-size: 28px; }
+      .tide .top .k { color: var(--muted); }
+      .tide .top .v { font-family: var(--font-mono); font-size: 30px; color: var(--accent); }
+      .bar { position: relative; height: 12px; margin-top: 14px; background: rgba(255, 255, 255, 0.08); border-radius: 6px; }
+      .bar .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--accent); transform-origin: 0 50%; }
+      .bar .ref { position: absolute; top: -6px; bottom: -6px; left: 33.3%; width: 2px; background: var(--ink); opacity: 0.7; }
+      .bar .reflabel { position: absolute; top: 22px; left: 33.3%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 16px; color: var(--muted); }
+      .effect { margin-top: 48px; font-size: 34px; line-height: 1.3; font-weight: 500; padding-left: 22px; border-left: 4px solid var(--accent); }
+
+      /* Untertitel */
+      #captions { position: absolute; left: 0; right: 0; top: 856px; height: 70px; }
+      .cap {
+        position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+        white-space: nowrap; font-size: 38px; font-weight: 500; opacity: 0;
+        padding: 10px 26px; border-radius: 12px; background: rgba(4, 6, 13, 0.62);
+      }
+
+      .note {
+        position: absolute; right: 60px; bottom: 34px; font-family: var(--font-mono);
+        font-size: 16px; color: var(--muted); letter-spacing: 0.08em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
+      <!-- Hintergrund: Sterne + Erde, den ganzen Film über -->
+      <div id="bg" class="clip" data-start="0" data-duration="60" data-track-index="0">
+        <div id="stars"></div>
+        <div id="moon" class="body"><div class="sphere"></div></div>
+        <div id="ceres" class="body"><div class="sphere"></div></div>
+        <div id="mars" class="body"><div class="sphere"></div></div>
+        <div id="saturn" class="body">
+          <div class="tilt"><div class="ring back"></div></div>
+          <div class="sphere"></div>
+          <div class="tilt"><div class="ring front"></div></div>
+        </div>
+        <div id="earth"></div>
+        <div id="flood"></div>
+        <div class="note" data-layout-ignore>Illustration, nicht maßstabsgetreu</div>
+      </div>
+
+      <!-- Szene 1: Intro -->
+      <div id="s1" class="clip" data-start="0" data-duration="7.2" data-track-index="1">
+        <div class="panel">
+          <div class="kicker">Gedankenexperiment</div>
+          <div class="headline">Was wäre, wenn wir den Mond austauschen?</div>
+          <div class="stats">
+            <div class="row"><span class="k">Abstand zur Erde</span><span class="v">384.400 km</span></div>
+            <div class="row"><span class="k">Bleibt bei jedem Tausch</span><span class="v">gleich</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Szene 2: Ceres -->
+      <div id="s2" class="clip" data-start="7.2" data-duration="14.4" data-track-index="1">
+        <div class="panel">
+          <div class="kicker">Tausch 01 / 03</div>
+          <div class="name">Ceres</div>
+          <div class="sub">Größter Körper im Asteroidengürtel</div>
+          <div class="stats">
+            <div class="row"><span class="k">Durchmesser</span><span class="v">940 km</span></div>
+            <div class="row"><span class="k">Masse (Mond = 1)</span><span class="v">0,013</span></div>
+            <div class="tide">
+              <div class="top"><span class="k">Gezeitenkraft</span><span class="v">0,013 ×</span></div>
+              <div class="bar"><div class="fill" data-to="0.019"></div><div class="ref"></div><div class="reflabel" data-layout-ignore>Mond</div></div>
+            </div>
+          </div>
+          <div class="effect">Fast nur noch Sonnengezeiten.<br />Vollmondnächte rund 20 × dunkler.</div>
+        </div>
+      </div>
+
+      <!-- Szene 3: Mars -->
+      <div id="s3" class="clip" data-start="21.6" data-duration="13.7" data-track-index="1">
+        <div class="panel">
+          <div class="kicker">Tausch 02 / 03</div>
+          <div class="name">Mars</div>
+          <div class="sub">Der Rote Planet</div>
+          <div class="stats">
+            <div class="row"><span class="k">Durchmesser</span><span class="v">6.779 km</span></div>
+            <div class="row"><span class="k">Masse (Mond = 1)</span><span class="v">8,7</span></div>
+            <div class="tide">
+              <div class="top"><span class="k">Gezeitenkraft</span><span class="v">8,7 ×</span></div>
+              <div class="bar"><div class="fill" data-to="0.49"></div><div class="ref"></div><div class="reflabel" data-layout-ignore>Mond</div></div>
+            </div>
+          </div>
+          <div class="effect">Fast doppelt so groß am Himmel.<br />Gewaltige Fluten an den Küsten.</div>
+        </div>
+      </div>
+
+      <!-- Szene 4: Saturn -->
+      <div id="s4" class="clip" data-start="35.3" data-duration="16" data-track-index="1">
+        <div class="panel">
+          <div class="kicker">Tausch 03 / 03</div>
+          <div class="name">Saturn</div>
+          <div class="sub">Gasriese mit Ringen</div>
+          <div class="stats">
+            <div class="row"><span class="k">Durchmesser</span><span class="v">116.460 km</span></div>
+            <div class="row"><span class="k">Masse (Mond = 1)</span><span class="v">≈ 7.700</span></div>
+            <div class="tide">
+              <div class="top"><span class="k">Gezeitenkraft</span><span class="v">≈ 7.700 ×</span></div>
+              <div class="bar"><div class="fill" data-to="0.98"></div><div class="ref"></div><div class="reflabel" data-layout-ignore>Mond</div></div>
+            </div>
+          </div>
+          <div class="effect">Die Erde umkreist ihn in ≈ 2,8 Tagen.<br />Ozeane überrollen Kontinente.</div>
+        </div>
+      </div>
+
+      <!-- Szene 5: Fazit -->
+      <div id="s5" class="clip" data-start="51.3" data-duration="8.7" data-track-index="1">
+        <div class="panel">
+          <div class="kicker">Fazit</div>
+          <div class="headline">Unser Mond ist genau richtig.</div>
+          <div class="stats">
+            <div class="row"><span class="k">Gezeiten</span><span class="v">moderat</span></div>
+            <div class="row"><span class="k">Erdachse</span><span class="v">stabilisiert</span></div>
+            <div class="row"><span class="k">Erdrotation</span><span class="v">sanft gebremst</span></div>
+          </div>
+          <div class="effect">Ein Tausch? Lieber nicht.</div>
+        </div>
+      </div>
+
+      <!-- Sprecher (ElevenLabs, Stimme "Günther Ferstl") -->
+      <audio id="vo1" src="assets/voice/s1.mp3" data-start="0.3" data-duration="6.56" data-track-index="3"></audio>
+      <audio id="vo2" src="assets/voice/s2.mp3" data-start="7.4" data-duration="13.76" data-track-index="3"></audio>
+      <audio id="vo3" src="assets/voice/s3.mp3" data-start="21.7" data-duration="13.12" data-track-index="3"></audio>
+      <audio id="vo4" src="assets/voice/s4.mp3" data-start="35.4" data-duration="15.68" data-track-index="3"></audio>
+
+      <!-- Untertitel (Sprechertext) -->
+      <div id="captions" class="clip" data-start="0" data-duration="60" data-track-index="2"></div>
+    </div>
+
+    <script>
+      // Sprechertext je Szene: [Szenenstart, Szenenende, Textblöcke]
+      // Muss mit voiceover/script.json übereinstimmen.
+      const SCRIPT = [
+        [0.3, 6.9, [
+          "Seit Milliarden Jahren begleitet uns der Mond.",
+          "Doch was wäre, wenn wir ihn austauschen würden?"
+        ]],
+        [7.4, 21.2, [
+          "Tausch eins: Ceres, der größte Brocken im Asteroidengürtel,",
+          "mit gut einem Prozent der Mondmasse.",
+          "Ebbe und Flut kämen fast nur noch von der Sonne,",
+          "und Vollmondnächte wären rund zwanzigmal dunkler."
+        ]],
+        [21.7, 34.9, [
+          "Tausch zwei: Mars.",
+          "Fast doppelt so groß am Himmel und knapp neunmal so schwer.",
+          "Die Gezeiten wären etwa neunmal stärker,",
+          "gewaltige Fluten würden täglich die Küsten überspülen."
+        ]],
+        [35.4, 51.1, [
+          "Tausch drei: Saturn, über dreißigmal so breit wie der Vollmond.",
+          "Eigentlich würde dann die Erde ihn umkreisen, in knapp drei Tagen.",
+          "Tausendfach stärkere Gezeiten:",
+          "Ozeane über den Kontinenten, Vulkane überall."
+        ]],
+        [51.6, 59.4, [
+          "Unser Mond ist also genau richtig:",
+          "Er treibt die Gezeiten an und stabilisiert die Erdachse.",
+          "Ein Tausch? Lieber nicht."
+        ]]
+      ];
+
+      // Deterministischer Sternenhimmel (kein Math.random)
+      let seed = 1337;
+      const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      const starsEl = document.getElementById("stars");
+      const twinkle = [];
+      for (let i = 0; i < 260; i++) {
+        const s = document.createElement("div");
+        s.className = "star";
+        const size = rnd() < 0.9 ? 1 + rnd() * 1.6 : 2.4 + rnd() * 1.6;
+        s.style.cssText = `left:${rnd() * 1920}px;top:${rnd() * 960}px;width:${size}px;height:${size}px;opacity:${0.25 + rnd() * 0.65}`;
+        starsEl.appendChild(s);
+        if (i % 7 === 0) twinkle.push(s);
+      }
+
+      // Untertitel-Elemente anlegen
+      const capsEl = document.getElementById("captions");
+      const caps = [];
+      SCRIPT.forEach(([start, end, lines]) => {
+        const words = lines.map((l) => l.split(" ").length);
+        const total = words.reduce((a, b) => a + b, 0);
+        let t = start;
+        lines.forEach((line, i) => {
+          const d = ((end - start) * words[i]) / total;
+          const el = document.createElement("div");
+          el.className = "cap";
+          el.textContent = line;
+          capsEl.appendChild(el);
+          caps.push({ el, t, d });
+          t += d;
+        });
+      });
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Sterne: langsame Drift + Funkeln
+      tl.fromTo("#stars", { x: 0 }, { x: -120, duration: 60, ease: "none" }, 0);
+      twinkle.forEach((s, i) => {
+        tl.to(s, { opacity: 0.15, duration: 1.2, yoyo: true, repeat: 23, ease: "sine.inOut" }, (i % 5) * 0.4);
+      });
+      tl.fromTo("#earth", { y: 60 }, { y: 0, duration: 3, ease: "power2.out" }, 0);
+
+      // Himmelskörper: Ausgangszustand
+      tl.set(["#ceres", "#mars", "#saturn"], { x: 1100, opacity: 0 }, 0);
+      tl.fromTo("#moon", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 2, ease: "power2.out" }, 0);
+      tl.to("#moon", { y: -14, duration: 5, ease: "sine.inOut" }, 1);
+
+      // Hilfsfunktion: Körper raus / rein
+      const out = (sel, at) => tl.to(sel, { x: 1100, rotation: 20, opacity: 0, duration: 0.8, ease: "power3.in" }, at);
+      const inn = (sel, at, dur = 1.1) =>
+        tl.fromTo(sel, { x: 1100, rotation: -20, opacity: 0 }, { x: 0, rotation: 0, opacity: 1, duration: dur, ease: "power3.out", immediateRender: false }, at);
+
+      out("#moon", 6.6);
+      inn("#ceres", 7.3);
+      tl.to("#ceres", { y: -10, duration: 11, ease: "sine.inOut" }, 8.4);
+      // Nacht wird dunkler bei Ceres
+      tl.to("#root", { filter: "brightness(0.82)", duration: 1.5 }, 17.2);
+      tl.to("#root", { filter: "brightness(1)", duration: 0.8 }, 20.8);
+
+      out("#ceres", 20.9);
+      inn("#mars", 21.7);
+      tl.to("#mars", { y: -16, rotation: 4, duration: 11, ease: "sine.inOut" }, 22.8);
+      // Flut-Welle bei Mars
+      tl.fromTo("#flood", { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 0.55, duration: 2, ease: "sine.inOut", immediateRender: false }, 29.0);
+      tl.to("#flood", { scaleY: 0.25, duration: 2, ease: "sine.inOut" }, 31.0);
+      tl.to("#flood", { scaleY: 0.6, duration: 1.6, ease: "sine.inOut" }, 33.0);
+
+      out("#mars", 34.6);
+      tl.to("#flood", { scaleY: 0, opacity: 0, duration: 0.8 }, 34.6);
+      tl.fromTo("#saturn", { x: 700, y: 80, scale: 0.25, opacity: 0, rotation: 0 },
+        { x: 420, y: 30, scale: 1, opacity: 1, duration: 3, ease: "power2.out", immediateRender: false }, 35.3);
+      tl.to("#saturn", { x: 360, y: 0, duration: 12, ease: "sine.inOut" }, 38.3);
+      // Kamera-Beben + massive Flut bei Saturn
+      tl.to("#flood", { opacity: 1, scaleY: 1.6, duration: 3, ease: "power2.inOut" }, 45.5);
+      tl.to("#earth", { y: 6, duration: 0.12, yoyo: true, repeat: 23, ease: "sine.inOut" }, 47.0);
+      tl.to("#saturn", { opacity: 0, scale: 1.25, duration: 1, ease: "power2.in" }, 50.6);
+      tl.to("#flood", { scaleY: 0, opacity: 0, duration: 1.2 }, 50.6);
+
+      // Mond kehrt zurück
+      tl.fromTo("#moon", { x: -200, y: 40, rotation: 0, opacity: 0, scale: 0.6 },
+        { x: 0, y: 0, opacity: 1, scale: 1, duration: 1.8, ease: "power3.out", immediateRender: false }, 51.4);
+      tl.to("#moon", { y: -12, duration: 6.5, ease: "sine.inOut" }, 53.2);
+      tl.to("#root", { opacity: 0, duration: 0.8, ease: "power1.in" }, 59.2);
+
+      // Panels: Einblenden der Inhalte
+      [["#s1", 0.4], ["#s2", 7.6], ["#s3", 21.9], ["#s4", 35.6], ["#s5", 51.6]].forEach(([id, at]) => {
+        const scene = document.querySelector(id);
+        const items = scene.querySelectorAll(".kicker, .name, .headline, .sub, .row, .tide");
+        tl.from(items, { y: 28, opacity: 0, duration: 0.6, stagger: 0.12, ease: "power3.out" }, at);
+        const fill = scene.querySelector(".fill");
+        if (fill) tl.fromTo(fill, { width: "0%" }, { width: fill.dataset.to * 100 + "%", duration: 1.4, ease: "power2.out", immediateRender: false }, at + 1.2);
+        const eff = scene.querySelector(".effect");
+        if (eff) tl.from(eff, { x: -24, opacity: 0, duration: 0.7, ease: "power3.out" }, at + 3.2);
+      });
+
+      // Untertitel
+      caps.forEach(({ el, t, d }) => {
+        tl.fromTo(el, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, t);
+        tl.to(el, { opacity: 0, duration: 0.2 }, t + d - 0.2);
+      });
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
