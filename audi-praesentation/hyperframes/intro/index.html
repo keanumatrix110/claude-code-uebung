@@ -1,0 +1,36 @@
+<!doctype html><html lang="de"><head><meta charset="UTF-8"/>
+<script src="gsap.min.js"></script><link rel="stylesheet" href="base.css"/>
+<style>
+#rings{left:50%;top:330px;transform:translateX(-50%)}
+#word{left:0;right:0;top:600px;text-align:center;font-family:"Inter";font-weight:700;font-size:150px;letter-spacing:.32em;padding-left:.32em}
+#word span{display:inline-block}
+#tag{left:0;right:0;top:810px;text-align:center}
+#sub{left:0;right:0;top:880px;text-align:center;font-size:30px;color:var(--muted);font-weight:300;letter-spacing:.08em}
+.dot{color:var(--red)}
+</style></head><body>
+<div id="root" data-composition-id="intro" data-start="0" data-duration="8" data-width="1920" data-height="1080">
+ <div class="sweep" id="sw"></div><div class="grain"></div>
+ <svg id="rings" class="abs" width="760" height="240" viewBox="0 0 760 240">
+  <defs><linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#c9ccd1"/><stop offset=".55" stop-color="#8a8f98"/><stop offset="1" stop-color="#e8eaee"/></linearGradient></defs>
+  <g fill="none" stroke="url(#chrome)" stroke-width="16">
+   <circle class="r" cx="125" cy="120" r="100"/><circle class="r" cx="295" cy="120" r="100"/>
+   <circle class="r" cx="465" cy="120" r="100"/><circle class="r" cx="635" cy="120" r="100"/></g></svg>
+ <div id="word" class="abs"><span>A</span><span>U</span><span>D</span><span>I</span></div>
+ <div id="tag" class="abs kicker">Vorsprung durch Technik</div>
+ <div id="sub" class="abs">Geschichte <span class="dot">•</span> Technik <span class="dot">•</span> Zukunft</div>
+</div>
+<script>
+const C=2*Math.PI*100;
+document.querySelectorAll(".r").forEach(c=>{c.style.strokeDasharray=C;c.style.strokeDashoffset=C;});
+const tl=gsap.timeline({paused:true});
+tl.fromTo("#root",{opacity:0},{opacity:1,duration:.8,ease:"power2.out"},0);
+tl.fromTo("#sw",{x:0},{x:3200,duration:3.2,ease:"power2.inOut"},.4);
+tl.to(".r",{strokeDashoffset:0,duration:1.6,ease:"power3.inOut",stagger:.22},.5);
+tl.fromTo("#rings",{scale:.92},{scale:1,duration:3,ease:"power2.out"},.5);
+tl.fromTo("#word span",{opacity:0,y:60,filter:"blur(12px)"},{opacity:1,y:0,filter:"blur(0px)",duration:.9,ease:"power4.out",stagger:.12},2.2);
+tl.fromTo("#word span",{x:(i)=>(i-1.5)*90},{x:0,duration:1.8,ease:"power3.out"},2.2);
+tl.fromTo("#tag",{opacity:0,y:20},{opacity:1,y:0,duration:.8,ease:"power3.out"},3.4);
+tl.fromTo("#sub",{opacity:0},{opacity:1,duration:.8},3.9);
+window.__timelines=window.__timelines||{};window.__timelines["intro"]=tl;tl.seek(0);
+</script></body></html>

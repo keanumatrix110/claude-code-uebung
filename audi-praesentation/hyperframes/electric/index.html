@@ -1,0 +1,39 @@
+<!doctype html><html lang="de"><head><meta charset="UTF-8"/>
+<script src="gsap.min.js"></script><link rel="stylesheet" href="base.css"/>
+<style>
+#root{background:radial-gradient(ellipse 60% 70% at 70% 50%,#2a0a12 0%,#120709 45%,#070708 100%)}
+.line{position:absolute;height:2px;left:-600px;width:600px;background:linear-gradient(90deg,transparent,rgba(245,5,55,.0),rgba(245,5,55,.9),#fff)}
+#head{left:140px;top:300px}
+#title{left:140px;top:350px;font-family:"Inter";font-weight:700;font-size:120px;line-height:1.02;letter-spacing:-.02em}
+#title span{display:block}
+#batt{left:1220px;top:380px;width:520px;height:250px;border:10px solid #e6e8ec;border-radius:36px;padding:18px}
+#cap{position:absolute;right:-38px;top:80px;width:24px;height:70px;border-radius:0 12px 12px 0;background:#e6e8ec}
+#lvl{height:100%;width:0;border-radius:18px;background:linear-gradient(90deg,#b0002a,#f50537)}
+#pct{left:1220px;top:660px;width:540px;text-align:center;font-family:"Inter";font-weight:700;font-size:96px}
+#lbl{left:1220px;top:780px;width:540px;text-align:center;font-size:28px;color:var(--silver)}
+#sub{left:140px;top:640px;font-size:34px;color:var(--silver);font-weight:300;max-width:900px;line-height:1.4}
+</style></head><body>
+<div id="root" data-composition-id="electric" data-start="0" data-duration="8" data-width="1920" data-height="1080">
+ <div class="grain"></div>
+ <div class="line" id="L0" style="top:180px"></div><div class="line" id="L1" style="top:470px"></div>
+ <div class="line" id="L2" style="top:760px"></div><div class="line" id="L3" style="top:930px"></div>
+ <div id="head" class="abs kicker">Kapitel · Elektrifizierung</div>
+ <div id="title" class="abs"><span>Die Zukunft</span><span>fährt elektrisch</span></div>
+ <div id="sub" class="abs">Von e-tron über PPE bis zur Formel 1: Audi baut die Marke neu auf.</div>
+ <div id="batt" class="abs"><div id="cap"></div><div id="lvl"></div></div>
+ <div id="pct" class="abs">0 %</div>
+ <div id="lbl" class="abs">E-Auslieferungen 2025 gegenüber Vorjahr: +36 %</div>
+</div>
+<script>
+const tl=gsap.timeline({paused:true});
+["#L0","#L1","#L2","#L3"].forEach((l,i)=>tl.fromTo(l,{x:0},{x:3100,duration:2.4,ease:"power2.inOut"},.2+i*.35));
+tl.fromTo("#head",{opacity:0,x:-30},{opacity:1,x:0,duration:.7,ease:"power3.out"},.4);
+tl.fromTo("#title span",{opacity:0,y:70,filter:"blur(10px)"},{opacity:1,y:0,filter:"blur(0px)",duration:1,ease:"power4.out",stagger:.2},.6);
+tl.fromTo("#sub",{opacity:0,y:20},{opacity:1,y:0,duration:.8,ease:"power3.out"},1.6);
+tl.fromTo("#batt",{opacity:0,scale:.85},{opacity:1,scale:1,duration:.8,ease:"back.out(1.5)"},1.2);
+const o={p:0},pct=document.getElementById("pct");
+tl.fromTo("#lvl",{width:"0%"},{width:"100%",duration:3,ease:"power1.inOut"},2.0);
+tl.fromTo(o,{p:0},{p:36,duration:3,ease:"power1.inOut",onUpdate:()=>{pct.textContent="+"+Math.round(o.p)+" %"}},2.0);
+tl.fromTo("#lbl",{opacity:0},{opacity:1,duration:.8},2.6);
+window.__timelines=window.__timelines||{};window.__timelines["electric"]=tl;tl.seek(0);
+</script></body></html>

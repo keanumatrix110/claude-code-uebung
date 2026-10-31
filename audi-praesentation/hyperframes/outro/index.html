@@ -1,0 +1,28 @@
+<!doctype html><html lang="de"><head><meta charset="UTF-8"/>
+<script src="gsap.min.js"></script><link rel="stylesheet" href="base.css"/>
+<style>
+#rings{left:50%;top:250px;transform:translateX(-50%)}
+#t{left:0;right:0;top:500px;text-align:center;font-family:"Inter";font-weight:700;font-size:140px}
+#q{left:0;right:0;top:700px;text-align:center;font-size:40px;color:var(--silver);font-weight:300}
+#tag{left:0;right:0;top:860px;text-align:center}
+</style></head><body>
+<div id="root" data-composition-id="outro" data-start="0" data-duration="7" data-width="1920" data-height="1080">
+ <div class="sweep" id="sw"></div><div class="grain"></div>
+ <svg id="rings" class="abs" width="440" height="140" viewBox="0 0 760 240"><g fill="none" stroke="#d9dce1" stroke-width="16">
+  <circle class="r" cx="125" cy="120" r="100"/><circle class="r" cx="295" cy="120" r="100"/>
+  <circle class="r" cx="465" cy="120" r="100"/><circle class="r" cx="635" cy="120" r="100"/></g></svg>
+ <div id="t" class="abs">Vielen Dank</div>
+ <div id="q" class="abs">Fragen und Diskussion</div>
+ <div id="tag" class="abs kicker">Vorsprung durch Technik</div>
+</div>
+<script>
+const C=2*Math.PI*100;document.querySelectorAll(".r").forEach(c=>{c.style.strokeDasharray=C;c.style.strokeDashoffset=C;});
+const tl=gsap.timeline({paused:true});
+tl.fromTo("#root",{opacity:0},{opacity:1,duration:.6},0);
+tl.fromTo("#sw",{x:0},{x:3200,duration:3,ease:"power2.inOut"},.3);
+tl.to(".r",{strokeDashoffset:0,duration:1.3,ease:"power3.inOut",stagger:.15},.3);
+tl.fromTo("#t",{opacity:0,y:50,filter:"blur(10px)"},{opacity:1,y:0,filter:"blur(0px)",duration:1,ease:"power4.out"},1.3);
+tl.fromTo("#q",{opacity:0,y:20},{opacity:1,y:0,duration:.8,ease:"power3.out"},2.1);
+tl.fromTo("#tag",{opacity:0},{opacity:1,duration:.8},2.7);
+window.__timelines=window.__timelines||{};window.__timelines["outro"]=tl;tl.seek(0);
+</script></body></html>
