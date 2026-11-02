@@ -1,0 +1,54 @@
+{
+  "titel": "Trolley-Problem",
+  "tts": {
+    "model_id": "eleven_v3",
+    "language_code": "de",
+    "voice_id": null,
+    "stability": 0.5,
+    "output_format": "mp3_44100_192"
+  },
+  "video": {
+    "breite": 1080,
+    "hoehe": 1920,
+    "fps": 30,
+    "bildwechsel_sek": 2.0,
+    "zoom": 0.08,
+    "nachlauf_sek": 0.6
+  },
+  "cover": {
+    "bild": null,
+    "zeilen": ["DAS", "TROLLEY-", "PROBLEM"]
+  },
+  "szenen": [
+    {
+      "id": "01_hook",
+      "text": "[serious] Alle Gedankenexperimente erklärt: das Trolley-Problem. [short pause]",
+      "bilder": []
+    },
+    {
+      "id": "02_hebel",
+      "text": "Ein Zug rast auf fünf Menschen zu. Du stehst am Hebel. Legst du ihn um, trifft der Zug nur einen. Ziehst du? [short pause] Die meisten sagen: ja.",
+      "bilder": []
+    },
+    {
+      "id": "03_bruecke",
+      "text": "Jetzt stehst du auf einer Brücke. Neben dir ein Fremder. Stößt du ihn runter, stoppt er den Zug. [short pause] Gleiche Rechnung. [dramatic] Und plötzlich sagen fast alle: nein.",
+      "bilder": []
+    },
+    {
+      "id": "04_arzt",
+      "text": "Noch eine Version: Du bist Arzt. Fünf Patienten brauchen ein Organ. Im Wartezimmer sitzt ein gesunder Mensch. [short pause] Würdest du ihn opfern? [whisper] Hier sagt praktisch niemand ja.",
+      "bilder": []
+    },
+    {
+      "id": "05_gehirn",
+      "text": "[thoughtful] Warum? Im Hirnscanner zeigt sich: Beim Hebel rechnet dein Kopf. Bei Brücke und Arzt schreit dein Gefühl, denn du müsstest selbst Hand anlegen. Dein Gehirn hat zwei Moralsysteme, und sie streiten.",
+      "bilder": []
+    },
+    {
+      "id": "06_outro",
+      "text": "[short pause] Es gibt kein richtiges Ergebnis. Nur die Frage, wem du vertraust. [excited] Hebel, Brücke oder Arzt? Schreib 1, 2 oder 3.",
+      "bilder": []
+    }
+  ]
+}
