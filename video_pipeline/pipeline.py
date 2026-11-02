@@ -382,6 +382,8 @@ def main() -> None:
     ap.add_argument("--mock-tts", action="store_true", help="kein API-Aufruf, stilles Audio mit geschätzten Zeiten")
     ap.add_argument("--platzhalter", action="store_true", help="fehlende Bilder als Platzhalter erzeugen")
     ap.add_argument("--neu-vertonen", action="store_true", help="Voiceover-Cache ignorieren (kostet Credits)")
+    ap.add_argument("--audio", type=Path, help="fertiges Voiceover verwenden statt TTS-Aufruf")
+    ap.add_argument("--timing", type=Path, help="Wortzeiten dazu (JSON: [{text,start,end}] oder [[text,start,end]])")
     args = ap.parse_args()
 
     for tool in ("ffmpeg", "ffprobe"):
@@ -409,7 +411,16 @@ def main() -> None:
     voice = os.environ.get("ELEVENLABS_VOICE_ID") or tts.get("voice_id") or ""
     sig = hashlib.sha256(json.dumps([voll, voice, tts, args.mock_tts], sort_keys=True).encode()).hexdigest()[:12]
     mp3, tjson = arbeit / f"voice_{sig}.mp3", arbeit / f"timing_{sig}.json"
-    if mp3.exists() and tjson.exists() and not args.neu_vertonen:
+    if args.audio:
+        if not args.timing:
+            raise SystemExit("--audio braucht --timing (z. B. Wortliste aus einer Scribe-Transkription).")
+        log(f"Externes Voiceover: {args.audio}")
+        mp3 = args.audio.resolve()
+        roh = json.loads(args.timing.read_text(encoding="utf-8"))
+        roh = roh.get("words", roh) if isinstance(roh, dict) else roh
+        timing = [(w["text"], w["start"], w["end"]) if isinstance(w, dict) else tuple(w) for w in roh]
+        timing = [t for t in timing if norm(str(t[0]))]
+    elif mp3.exists() and tjson.exists() and not args.neu_vertonen:
         log("Voiceover aus Cache")
         timing = [tuple(x) for x in json.loads(tjson.read_text())]
     elif args.mock_tts:
