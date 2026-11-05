@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="de" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter Display"; src: url("assets/fonts/InterDisplay-Medium.otf"); font-weight: 500; }
+      @font-face { font-family: "Inter Display"; src: url("assets/fonts/InterDisplay-ExtraBold.otf"); font-weight: 800; }
+      @font-face { font-family: "Inter Display"; src: url("assets/fonts/InterDisplay-Black.otf"); font-weight: 900; }
+      @font-face { font-family: "Noto Color Emoji"; src: url("assets/fonts/NotoColorEmoji.ttf"); }
+      :root { --ink: #ffffff; --font: "Inter Display", sans-serif; --emoji: "Noto Color Emoji"; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: var(--font); color: var(--ink); }
+      .clip { position: absolute; inset: 0; }
+      .scene { overflow: hidden; }
+      .bg { position: absolute; inset: -40px; }
+      .flash, .redpulse { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+      .redpulse { background: radial-gradient(closest-side, rgba(255,0,0,0) 40%, rgba(255,0,0,0.9) 100%); }
+      .ghost { position: absolute; left: 0; right: 0; top: 560px; text-align: center; font-weight: 900; font-size: 1300px; line-height: 1; letter-spacing: -0.06em; color: #fff; opacity: 0.07; }
+
+      .rankwrap { position: absolute; top: 250px; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; }
+      .platz { font-weight: 800; font-size: 64px; letter-spacing: 0.35em; padding-left: 0.35em; opacity: 0.9; }
+      .rank { font-weight: 900; font-size: 300px; line-height: 0.95; letter-spacing: -0.05em; text-shadow: 0 12px 0 rgba(0,0,0,0.45); }
+      .country { position: absolute; top: 640px; left: 140px; right: 140px; display: flex; justify-content: center; align-items: center; gap: 22px;
+        font-weight: 900; font-size: 64px; letter-spacing: 0.04em; }
+      .country span:last-child { background: rgba(0,0,0,0.45); padding: 10px 30px; border-radius: 18px; }
+      .flag { font-family: var(--emoji); font-size: 84px; }
+      .icon { position: absolute; top: 760px; left: 0; right: 0; text-align: center; font-family: var(--emoji); font-size: 270px; line-height: 1.2; filter: drop-shadow(0 18px 24px rgba(0,0,0,0.5)); }
+      .headline { position: absolute; top: 1105px; left: 120px; right: 120px; text-align: center; font-weight: 900; font-size: 66px; line-height: 1.08; text-transform: uppercase; text-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+      .stamp { position: absolute; top: 805px; left: 0; right: 0; margin: 0 auto; width: max-content; padding: 10px 34px; border: 10px solid; border-radius: 22px;
+        font-weight: 900; font-size: 92px; letter-spacing: 0.02em; background: rgba(0,0,0,0.72); opacity: 0; }
+      .source { position: absolute; top: 1500px; left: 120px; right: 160px; text-align: center; font-weight: 500; font-size: 28px; opacity: 0; color: #e8e8e8; }
+
+      .cap { inset: auto; left: 90px; right: 150px; top: 1290px; height: 180px; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 0 30px;
+        font-weight: 900; font-size: 78px; line-height: 1.05; text-transform: uppercase;
+        -webkit-text-stroke: 4px #000; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,0.75); }
+      .cap span { display: inline-block; }
+
+      #meter { inset: auto; top: 120px; left: 140px; right: 140px; height: 90px; }
+      .meter-label { font-weight: 900; font-size: 30px; letter-spacing: 0.3em; text-align: center; margin-bottom: 12px; text-shadow: 0 3px 8px rgba(0,0,0,0.7); }
+      .meter-bar { display: flex; gap: 8px; height: 30px; padding: 6px; background: rgba(0,0,0,0.55); border-radius: 14px; }
+      .meter-bar i { flex: 1; border-radius: 6px; opacity: 0.12; }
+
+      .globe { position: absolute; top: 330px; left: 0; right: 0; text-align: center; font-family: var(--emoji); font-size: 300px; }
+      .intro-top, .intro-mid { position: absolute; left: 60px; right: 60px; text-align: center; font-weight: 900; letter-spacing: -0.02em; }
+      .intro-top { top: 760px; font-size: 130px; }
+      .intro-mid { top: 905px; font-size: 80px; white-space: nowrap; }
+      .hl { color: #ffe14d; }
+      .intro-sub { position: absolute; top: 1060px; left: 60px; right: 60px; text-align: center; font-weight: 800; font-size: 60px; }
+      .krass { display: inline-block; color: #ff3b3b; font-weight: 900; }
+
+      .outro-q { position: absolute; top: 470px; left: 40px; right: 40px; text-align: center; font-weight: 900; font-size: 88px; white-space: nowrap; line-height: 1.05; }
+      .outro-arrow { position: absolute; top: 760px; line-height: 1; left: 0; right: 0; text-align: center; font-family: var(--emoji); font-size: 220px; }
+      .outro-c { position: absolute; top: 1080px; left: 80px; right: 80px; text-align: center; font-weight: 800; font-size: 58px; color: #ffe14d; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="75.6" data-width="1080" data-height="1920">
+      <section id="intro" class="scene clip" data-start="0" data-duration="4.4" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(120% 80% at 50% 35%, #2b2f6b 0%, #0d0e24 60%, #05050d 100%)"></div>
+        <div class="globe">🌍</div>
+        <div class="intro-top">10 GESETZE,</div>
+        <div class="intro-mid">DIE ES <span class="hl">WIRKLICH</span> GIBT</div>
+        <div class="intro-sub">…und sie werden immer <span class="krass">KRASSER</span></div>
+      </section>
+      <section id="s10" class="scene clip" data-start="4.4" data-duration="6.68" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(175 70% 32%) 0%, hsl(175 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">10</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(175 100% 60%)">10</div></div>
+        <div class="country"><span class="flag">🇨🇭</span><span>SCHWEIZ</span></div>
+        <div class="icon">🐹</div>
+        <div class="headline">Meerschweinchen nie allein halten</div>
+        <div class="stamp" style="border-color:hsl(175 100% 58%);color:hsl(175 100% 62%)">PFLICHT: 2+</div>
+        <div class="source">Quelle: Tierschutzverordnung (TSchV), Art. 13</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s9" class="scene clip" data-start="11.08" data-duration="5.64" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(156 70% 30.8%) 0%, hsl(156 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">9</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(156 100% 60%)">9</div></div>
+        <div class="country"><span class="flag">🇮🇹</span><span>VENEDIG</span></div>
+        <div class="icon">🕊️</div>
+        <div class="headline">Tauben füttern verboten</div>
+        <div class="stamp" style="border-color:hsl(156 100% 58%);color:hsl(156 100% 62%)">BUSSGELD</div>
+        <div class="source">Quelle: Stadt Venedig, Fütterungsverbot seit 2008</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s8" class="scene clip" data-start="16.72" data-duration="5.8" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(136 70% 29.6%) 0%, hsl(136 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">8</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(136 100% 60%)">8</div></div>
+        <div class="country"><span class="flag">🇮🇸</span><span>ISLAND</span></div>
+        <div class="icon">👶</div>
+        <div class="headline">Babynamen brauchen Genehmigung</div>
+        <div class="stamp" style="border-color:hsl(136 100% 58%);color:hsl(136 100% 62%)">GENEHMIGT?</div>
+        <div class="source">Quelle: Personennamengesetz Nr. 45/1996, Namenskomitee</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s7" class="scene clip" data-start="22.52" data-duration="6.76" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(117 70% 28.4%) 0%, hsl(117 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">7</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(117 100% 60%)">7</div></div>
+        <div class="country"><span class="flag">🇯🇵</span><span>JAPAN</span></div>
+        <div class="icon">📏</div>
+        <div class="headline">Der Staat misst deinen Bauch</div>
+        <div class="stamp" style="border-color:hsl(117 100% 58%);color:hsl(117 100% 62%)">GRENZWERT!</div>
+        <div class="source">Quelle: „Metabo-Gesetz“, Gesundheitschecks seit 2008</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s6" class="scene clip" data-start="29.28" data-duration="6.24" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(97 70% 27.2%) 0%, hsl(97 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">6</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(97 100% 60%)">6</div></div>
+        <div class="country"><span class="flag">🇸🇬</span><span>SINGAPUR</span></div>
+        <div class="icon">🍬</div>
+        <div class="headline">Kaugummi-Verkauf verboten</div>
+        <div class="stamp" style="border-color:hsl(97 100% 58%);color:hsl(97 100% 62%)">VERBOTEN</div>
+        <div class="source">Quelle: Importverordnung, Verbot seit 1992</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s5" class="scene clip" data-start="35.52" data-duration="6.52" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(78 70% 26%) 0%, hsl(78 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">5</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(78 100% 60%)">5</div></div>
+        <div class="country"><span class="flag">🇨🇳</span><span>CHINA</span></div>
+        <div class="icon">🧘</div>
+        <div class="headline">Wiedergeburt nur mit Genehmigung</div>
+        <div class="stamp" style="border-color:hsl(78 100% 58%);color:hsl(78 100% 62%)">ANTRAG NÖTIG</div>
+        <div class="source">Quelle: Staatliche Religionsbehörde, Anordnung Nr. 5 (2007)</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s4" class="scene clip" data-start="42.04" data-duration="8.44" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(58 70% 24.8%) 0%, hsl(58 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">4</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(58 100% 60%)">4</div></div>
+        <div class="country"><span class="flag">🇹🇭</span><span>THAILAND</span></div>
+        <div class="icon">👑</div>
+        <div class="headline">Kritik am König = Gefängnis</div>
+        <div class="stamp" style="border-color:hsl(58 100% 58%);color:hsl(58 100% 62%)">50 JAHRE HAFT</div>
+        <div class="source">Quelle: Strafgesetzbuch §112; Urteil Januar 2024</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s3" class="scene clip" data-start="50.48" data-duration="5.4" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(39 70% 23.6%) 0%, hsl(39 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">3</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(39 100% 60%)">3</div></div>
+        <div class="country"><span class="flag">🇧🇳</span><span>BRUNEI</span></div>
+        <div class="icon">⚖️</div>
+        <div class="headline">Steinigung im Strafgesetz</div>
+        <div class="stamp" style="border-color:hsl(39 100% 58%);color:hsl(39 100% 62%)">IM GESETZ</div>
+        <div class="source">Quelle: Syariah Penal Code Order, voll in Kraft seit 2019</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s2" class="scene clip" data-start="55.88" data-duration="5.84" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(19 70% 22.4%) 0%, hsl(19 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">2</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(19 100% 60%)">2</div></div>
+        <div class="country"><span class="flag">🇦🇫</span><span>AFGHANISTAN</span></div>
+        <div class="icon">🤐</div>
+        <div class="headline">Frauenstimmen öffentlich verboten</div>
+        <div class="stamp" style="border-color:hsl(19 100% 58%);color:hsl(19 100% 62%)">VERSTUMMT</div>
+        <div class="source">Quelle: Taliban-„Tugendgesetz“, August 2024</div>
+        <div class="flash"></div>
+      </section>
+      <section id="s1" class="scene clip" data-start="61.72" data-duration="9.08" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(130% 90% at 50% 30%, hsl(0 70% 21.200000000000003%) 0%, hsl(0 60% 12%) 55%, #050507 100%)"></div>
+        <div class="ghost">1</div>
+        <div class="rankwrap"><div class="platz">PLATZ</div><div class="rank" style="color:hsl(0 100% 60%)">1</div></div>
+        <div class="country"><span class="flag">🇰🇵</span><span>NORDKOREA</span></div>
+        <div class="icon">📺</div>
+        <div class="headline">Südkoreanische Serien = Tod</div>
+        <div class="stamp" style="border-color:hsl(0 100% 58%);color:hsl(0 100% 62%)">TODESSTRAFE</div>
+        <div class="source">Quelle: Gesetz gegen reaktionäres Denken, 2020</div>
+        <div class="redpulse"></div><div class="flash"></div>
+      </section>
+      <section id="outro" class="scene clip" data-start="70.8" data-duration="4.8" data-track-index="1">
+        <div class="bg" style="background: radial-gradient(120% 80% at 50% 40%, #3a0a0a 0%, #120404 60%, #000 100%)"></div>
+        <div class="outro-q">WELCHES SCHOCKT<br/>DICH AM MEISTEN?</div>
+        <div class="outro-arrow">👇</div>
+        <div class="outro-c">Schreib's in die Kommentare!</div>
+        <div class="flash"></div>
+      </section>
+      <div id="meter" class="clip" data-start="4.4" data-duration="66.4" data-track-index="2">
+        <div class="meter-label">KRASS-METER</div>
+        <div class="meter-bar"><i id="seg0" style="background:hsl(175 100% 55%)"></i><i id="seg1" style="background:hsl(156 100% 55%)"></i><i id="seg2" style="background:hsl(136 100% 55%)"></i><i id="seg3" style="background:hsl(117 100% 55%)"></i><i id="seg4" style="background:hsl(97 100% 55%)"></i><i id="seg5" style="background:hsl(78 100% 55%)"></i><i id="seg6" style="background:hsl(58 100% 55%)"></i><i id="seg7" style="background:hsl(39 100% 55%)"></i><i id="seg8" style="background:hsl(19 100% 55%)"></i><i id="seg9" style="background:hsl(0 100% 55%)"></i></div>
+      </div>
+      <div id="cap0" class="cap clip" data-start="4.44" data-duration="1.16" data-track-index="3"><span id="w0_0">Platz</span> <span id="w0_1">zehn:</span></div>
+      <div id="cap1" class="cap clip" data-start="5.6" data-duration="0.76" data-track-index="3"><span id="w1_0">In</span> <span id="w1_1">der</span> <span id="w1_2">Schweiz</span></div>
+      <div id="cap2" class="cap clip" data-start="6.36" data-duration="0.56" data-track-index="3"><span id="w2_0">darfst</span> <span id="w2_1">du</span> <span id="w2_2">ein</span></div>
+      <div id="cap3" class="cap clip" data-start="6.92" data-duration="1.44" data-track-index="3"><span id="w3_0">Meerschweinchen</span> <span id="w3_1">nicht</span> <span id="w3_2">allein</span></div>
+      <div id="cap4" class="cap clip" data-start="8.36" data-duration="0.64" data-track-index="3"><span id="w4_0">halten.</span></div>
+      <div id="cap5" class="cap clip" data-start="9" data-duration="0.6" data-track-index="3"><span id="w5_0">Es</span> <span id="w5_1">braucht</span> <span id="w5_2">per</span></div>
+      <div id="cap6" class="cap clip" data-start="9.6" data-duration="1.48" data-track-index="3"><span id="w6_0">Gesetz</span> <span id="w6_1">Gesellschaft.</span></div>
+      <div id="cap7" class="cap clip" data-start="11.08" data-duration="1.08" data-track-index="3"><span id="w7_0">Platz</span> <span id="w7_1">neun:</span></div>
+      <div id="cap8" class="cap clip" data-start="12.16" data-duration="0.96" data-track-index="3"><span id="w8_0">In</span> <span id="w8_1">Venedig</span> <span id="w8_2">ist</span></div>
+      <div id="cap9" class="cap clip" data-start="13.12" data-duration="1.64" data-track-index="3"><span id="w9_0">Tauben</span> <span id="w9_1">füttern</span> <span id="w9_2">verboten.</span></div>
+      <div id="cap10" class="cap clip" data-start="14.76" data-duration="0.92" data-track-index="3"><span id="w10_0">Wer</span> <span id="w10_1">erwischt</span> <span id="w10_2">wird,</span></div>
+      <div id="cap11" class="cap clip" data-start="15.68" data-duration="1.04" data-track-index="3"><span id="w11_0">zahlt</span> <span id="w11_1">Strafe.</span></div>
+      <div id="cap12" class="cap clip" data-start="16.72" data-duration="1.16" data-track-index="3"><span id="w12_0">Platz</span> <span id="w12_1">acht:</span></div>
+      <div id="cap13" class="cap clip" data-start="17.88" data-duration="0.88" data-track-index="3"><span id="w13_0">In</span> <span id="w13_1">Island</span> <span id="w13_2">muss</span></div>
+      <div id="cap14" class="cap clip" data-start="18.76" data-duration="1.48" data-track-index="3"><span id="w14_0">ein</span> <span id="w14_1">staatliches</span> <span id="w14_2">Komitee</span></div>
+      <div id="cap15" class="cap clip" data-start="20.24" data-duration="1.08" data-track-index="3"><span id="w15_0">den</span> <span id="w15_1">Vornamen</span> <span id="w15_2">deines</span></div>
+      <div id="cap16" class="cap clip" data-start="21.32" data-duration="1.2" data-track-index="3"><span id="w16_0">Babys</span> <span id="w16_1">genehmigen.</span></div>
+      <div id="cap17" class="cap clip" data-start="22.52" data-duration="1.12" data-track-index="3"><span id="w17_0">Platz</span> <span id="w17_1">sieben:</span></div>
+      <div id="cap18" class="cap clip" data-start="23.64" data-duration="0.92" data-track-index="3"><span id="w18_0">In</span> <span id="w18_1">Japan</span> <span id="w18_2">wird</span></div>
+      <div id="cap19" class="cap clip" data-start="24.56" data-duration="0.88" data-track-index="3"><span id="w19_0">ab</span> <span id="w19_1">vierzig</span> <span id="w19_2">dein</span></div>
+      <div id="cap20" class="cap clip" data-start="25.44" data-duration="1.28" data-track-index="3"><span id="w20_0">Bauchumfang</span> <span id="w20_1">gemessen.</span></div>
+      <div id="cap21" class="cap clip" data-start="26.72" data-duration="0.88" data-track-index="3"><span id="w21_0">Liegst</span> <span id="w21_1">du</span> <span id="w21_2">drüber,</span></div>
+      <div id="cap22" class="cap clip" data-start="27.6" data-duration="1.68" data-track-index="3"><span id="w22_0">gibt's</span> <span id="w22_1">eine</span> <span id="w22_2">Gesundheitsberatung.</span></div>
+      <div id="cap23" class="cap clip" data-start="29.28" data-duration="1.16" data-track-index="3"><span id="w23_0">Platz</span> <span id="w23_1">sechs:</span></div>
+      <div id="cap24" class="cap clip" data-start="30.44" data-duration="0.96" data-track-index="3"><span id="w24_0">In</span> <span id="w24_1">Singapur</span> <span id="w24_2">ist</span></div>
+      <div id="cap25" class="cap clip" data-start="31.4" data-duration="0.8" data-track-index="3"><span id="w25_0">der</span> <span id="w25_1">Verkauf</span> <span id="w25_2">von</span></div>
+      <div id="cap26" class="cap clip" data-start="32.2" data-duration="2.4" data-track-index="3"><span id="w26_0">Kaugummi</span> <span id="w26_1">seit</span> <span id="w26_2">1992</span></div>
+      <div id="cap27" class="cap clip" data-start="34.6" data-duration="0.92" data-track-index="3"><span id="w27_0">verboten.</span></div>
+      <div id="cap28" class="cap clip" data-start="35.52" data-duration="1.213" data-track-index="3"><span id="w28_0">Platz</span> <span id="w28_1">fünf:</span></div>
+      <div id="cap29" class="cap clip" data-start="36.733" data-duration="0.867" data-track-index="3"><span id="w29_0">In</span> <span id="w29_1">China</span> <span id="w29_2">braucht</span></div>
+      <div id="cap30" class="cap clip" data-start="37.6" data-duration="1.2" data-track-index="3"><span id="w30_0">ein</span> <span id="w30_1">tibetischer</span> <span id="w30_2">Lama</span></div>
+      <div id="cap31" class="cap clip" data-start="38.8" data-duration="1.64" data-track-index="3"><span id="w31_0">eine</span> <span id="w31_1">staatliche</span> <span id="w31_2">Genehmigung,</span></div>
+      <div id="cap32" class="cap clip" data-start="40.44" data-duration="1.04" data-track-index="3"><span id="w32_0">um</span> <span id="w32_1">wiedergeboren</span> <span id="w32_2">zu</span></div>
+      <div id="cap33" class="cap clip" data-start="41.48" data-duration="0.56" data-track-index="3"><span id="w33_0">werden.</span></div>
+      <div id="cap34" class="cap clip" data-start="42.04" data-duration="1.168" data-track-index="3"><span id="w34_0">Platz</span> <span id="w34_1">vier:</span></div>
+      <div id="cap35" class="cap clip" data-start="43.208" data-duration="0.992" data-track-index="3"><span id="w35_0">In</span> <span id="w35_1">Thailand</span> <span id="w35_2">drohen</span></div>
+      <div id="cap36" class="cap clip" data-start="44.2" data-duration="0.76" data-track-index="3"><span id="w36_0">für</span> <span id="w36_1">Kritik</span> <span id="w36_2">am</span></div>
+      <div id="cap37" class="cap clip" data-start="44.96" data-duration="0.92" data-track-index="3"><span id="w37_0">König</span> <span id="w37_1">bis</span> <span id="w37_2">zu</span></div>
+      <div id="cap38" class="cap clip" data-start="45.88" data-duration="1.64" data-track-index="3"><span id="w38_0">15</span> <span id="w38_1">Jahre</span> <span id="w38_2">Haft.</span></div>
+      <div id="cap39" class="cap clip" data-start="47.52" data-duration="0.92" data-track-index="3"><span id="w39_0">Pro</span> <span id="w39_1">Fall.</span></div>
+      <div id="cap40" class="cap clip" data-start="48.44" data-duration="0.96" data-track-index="3"><span id="w40_0">Ein</span> <span id="w40_1">Mann</span> <span id="w40_2">bekam</span></div>
+      <div id="cap41" class="cap clip" data-start="49.4" data-duration="1.08" data-track-index="3"><span id="w41_0">50</span> <span id="w41_1">Jahre.</span></div>
+      <div id="cap42" class="cap clip" data-start="50.48" data-duration="1.12" data-track-index="3"><span id="w42_0">Platz</span> <span id="w42_1">drei:</span></div>
+      <div id="cap43" class="cap clip" data-start="51.6" data-duration="0.92" data-track-index="3"><span id="w43_0">In</span> <span id="w43_1">Brunei</span> <span id="w43_2">steht</span></div>
+      <div id="cap44" class="cap clip" data-start="52.52" data-duration="1.44" data-track-index="3"><span id="w44_0">seit</span> <span id="w44_1">2019</span> <span id="w44_2">die</span></div>
+      <div id="cap45" class="cap clip" data-start="53.96" data-duration="1.92" data-track-index="3"><span id="w45_0">Steinigung</span> <span id="w45_1">im</span> <span id="w45_2">Strafgesetz.</span></div>
+      <div id="cap46" class="cap clip" data-start="55.88" data-duration="1.16" data-track-index="3"><span id="w46_0">Platz</span> <span id="w46_1">zwei:</span></div>
+      <div id="cap47" class="cap clip" data-start="57.04" data-duration="1.32" data-track-index="3"><span id="w47_0">In</span> <span id="w47_1">Afghanistan</span> <span id="w47_2">dürfen</span></div>
+      <div id="cap48" class="cap clip" data-start="58.36" data-duration="1" data-track-index="3"><span id="w48_0">Frauen</span> <span id="w48_1">ihre</span> <span id="w48_2">Stimme</span></div>
+      <div id="cap49" class="cap clip" data-start="59.36" data-duration="1.08" data-track-index="3"><span id="w49_0">in</span> <span id="w49_1">der</span> <span id="w49_2">Öffentlichkeit</span></div>
+      <div id="cap50" class="cap clip" data-start="60.44" data-duration="1.28" data-track-index="3"><span id="w50_0">nicht</span> <span id="w50_1">hören</span> <span id="w50_2">lassen.</span></div>
+      <div id="cap51" class="cap clip" data-start="61.72" data-duration="1.4" data-track-index="3"><span id="w51_0">Und</span> <span id="w51_1">Platz</span> <span id="w51_2">eins:</span></div>
+      <div id="cap52" class="cap clip" data-start="63.12" data-duration="1.16" data-track-index="3"><span id="w52_0">In</span> <span id="w52_1">Nordkorea</span> <span id="w52_2">droht</span></div>
+      <div id="cap53" class="cap clip" data-start="64.28" data-duration="0.88" data-track-index="3"><span id="w53_0">für</span> <span id="w53_1">das</span> <span id="w53_2">Verbreiten</span></div>
+      <div id="cap54" class="cap clip" data-start="65.16" data-duration="1.76" data-track-index="3"><span id="w54_0">südkoreanischer</span> <span id="w54_1">Serien</span> <span id="w54_2">die</span></div>
+      <div id="cap55" class="cap clip" data-start="66.92" data-duration="1.12" data-track-index="3"><span id="w55_0">Todesstrafe.</span></div>
+      <div id="cap56" class="cap clip" data-start="68.04" data-duration="0.52" data-track-index="3"><span id="w56_0">Wer</span> <span id="w56_1">sie</span> <span id="w56_2">nur</span></div>
+      <div id="cap57" class="cap clip" data-start="68.56" data-duration="0.493" data-track-index="3"><span id="w57_0">schaut,</span></div>
+      <div id="cap58" class="cap clip" data-start="69.053" data-duration="0.987" data-track-index="3"><span id="w58_0">kann</span> <span id="w58_1">im</span> <span id="w58_2">Arbeitslager</span></div>
+      <div id="cap59" class="cap clip" data-start="70.04" data-duration="0.777" data-track-index="3"><span id="w59_0">landen.</span></div>
+    </div>
+    <script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+
+  tl.fromTo("#intro .globe", { scale: 0.75, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.8)" }, 0.05);
+  tl.to("#intro .globe", { rotation: 360, duration: 4.4, ease: "none" }, 0.75);
+  tl.fromTo("#intro .intro-top", { y: -40, opacity: 1, scale: 1.15 }, { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: "power4.out" }, 0.02);
+  tl.fromTo("#intro .intro-mid", { scale: 2.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "power4.out" }, 0.95);
+  tl.fromTo("#intro .hl", { color: "#ffffff" }, { color: "#ffe14d", duration: 0.2 }, 1.36);
+  tl.fromTo("#intro .intro-sub", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 2.45);
+  tl.fromTo("#intro .krass", { scale: 1 }, { scale: 1.25, duration: 0.25, ease: "back.out(3)" }, 3.6);
+  tl.to("#intro .krass", { x: 6, duration: 0.04, repeat: 9, yoyo: true, ease: "none" }, 3.85);
+
+  // Platz 10
+  tl.fromTo("#s10 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 4.4);
+  tl.fromTo("#s10 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 4.45);
+  tl.fromTo("#s10 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 4.45);
+  tl.fromTo("#s10 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 4.4);
+  tl.to("#s10 .ghost", { y: -120, duration: 6.68, ease: "none" }, 4.4);
+  tl.fromTo("#s10 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 5.15);
+  tl.fromTo("#s10 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 5.35);
+  tl.to("#s10 .icon", { y: -26, duration: 0.6, repeat: 8, yoyo: true, ease: "sine.inOut" }, 5.9);
+  tl.fromTo("#s10 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 5.6);
+  tl.fromTo("#s10 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 5.9);
+  tl.fromTo("#s10 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 9.46);
+  tl.to("#s10 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 9.48);
+  tl.fromTo("#s10 .bg", { x: 0 }, { x: 10, duration: 0.04, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, 9.68);
+
+  // Platz 9
+  tl.fromTo("#s9 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 11.08);
+  tl.fromTo("#s9 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 11.13);
+  tl.fromTo("#s9 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 11.13);
+  tl.fromTo("#s9 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 11.08);
+  tl.to("#s9 .ghost", { y: -120, duration: 5.64, ease: "none" }, 11.08);
+  tl.fromTo("#s9 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 11.83);
+  tl.fromTo("#s9 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 12.03);
+  tl.to("#s9 .icon", { y: -26, duration: 0.6, repeat: 6, yoyo: true, ease: "sine.inOut" }, 12.58);
+  tl.fromTo("#s9 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 12.28);
+  tl.fromTo("#s9 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 12.58);
+  tl.fromTo("#s9 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 15.54);
+  tl.to("#s9 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 15.56);
+  tl.fromTo("#s9 .bg", { x: 0 }, { x: 10, duration: 0.04, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, 15.76);
+
+  // Platz 8
+  tl.fromTo("#s8 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 16.72);
+  tl.fromTo("#s8 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 16.77);
+  tl.fromTo("#s8 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 16.77);
+  tl.fromTo("#s8 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 16.72);
+  tl.to("#s8 .ghost", { y: -120, duration: 5.8, ease: "none" }, 16.72);
+  tl.fromTo("#s8 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 17.47);
+  tl.fromTo("#s8 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 17.67);
+  tl.to("#s8 .icon", { y: -26, duration: 0.6, repeat: 6, yoyo: true, ease: "sine.inOut" }, 18.22);
+  tl.fromTo("#s8 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 17.92);
+  tl.fromTo("#s8 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 18.22);
+  tl.fromTo("#s8 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 21.58);
+  tl.to("#s8 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 21.6);
+  tl.fromTo("#s8 .bg", { x: 0 }, { x: 10, duration: 0.04, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, 21.8);
+
+  // Platz 7
+  tl.fromTo("#s7 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 22.52);
+  tl.fromTo("#s7 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 22.57);
+  tl.fromTo("#s7 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 22.57);
+  tl.fromTo("#s7 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 22.52);
+  tl.to("#s7 .ghost", { y: -120, duration: 6.76, ease: "none" }, 22.52);
+  tl.fromTo("#s7 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 23.27);
+  tl.fromTo("#s7 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 23.47);
+  tl.to("#s7 .icon", { y: -26, duration: 0.6, repeat: 8, yoyo: true, ease: "sine.inOut" }, 24.02);
+  tl.fromTo("#s7 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 23.72);
+  tl.fromTo("#s7 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 24.02);
+  tl.fromTo("#s7 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 26.58);
+  tl.to("#s7 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 26.6);
+  tl.fromTo("#s7 .bg", { x: 0 }, { x: 10, duration: 0.04, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, 26.8);
+
+  // Platz 6
+  tl.fromTo("#s6 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 29.28);
+  tl.fromTo("#s6 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 29.33);
+  tl.fromTo("#s6 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 29.33);
+  tl.fromTo("#s6 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 29.28);
+  tl.to("#s6 .ghost", { y: -120, duration: 6.24, ease: "none" }, 29.28);
+  tl.fromTo("#s6 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 30.03);
+  tl.fromTo("#s6 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 30.23);
+  tl.to("#s6 .icon", { y: -26, duration: 0.6, repeat: 7, yoyo: true, ease: "sine.inOut" }, 30.78);
+  tl.fromTo("#s6 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 30.48);
+  tl.fromTo("#s6 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 30.78);
+  tl.fromTo("#s6 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 34.46);
+  tl.to("#s6 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 34.48);
+  tl.fromTo("#s6 .bg", { x: 0 }, { x: 10, duration: 0.04, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, 34.68);
+
+  // Platz 5
+  tl.fromTo("#s5 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 35.52);
+  tl.fromTo("#s5 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 35.57);
+  tl.fromTo("#s5 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 35.57);
+  tl.fromTo("#s5 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 35.52);
+  tl.to("#s5 .ghost", { y: -120, duration: 6.52, ease: "none" }, 35.52);
+  tl.fromTo("#s5 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 36.27);
+  tl.fromTo("#s5 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 36.47);
+  tl.to("#s5 .icon", { y: -26, duration: 0.6, repeat: 8, yoyo: true, ease: "sine.inOut" }, 37.02);
+  tl.fromTo("#s5 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 36.72);
+  tl.fromTo("#s5 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 37.02);
+  tl.fromTo("#s5 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 39.58);
+  tl.to("#s5 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 39.6);
+  tl.fromTo("#s5 .bg", { x: 0 }, { x: 10, duration: 0.04, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, 39.8);
+
+  // Platz 4
+  tl.fromTo("#s4 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 42.04);
+  tl.fromTo("#s4 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 42.09);
+  tl.fromTo("#s4 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 42.09);
+  tl.fromTo("#s4 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 42.04);
+  tl.to("#s4 .ghost", { y: -120, duration: 8.44, ease: "none" }, 42.04);
+  tl.fromTo("#s4 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 42.79);
+  tl.fromTo("#s4 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 42.99);
+  tl.to("#s4 .icon", { y: -26, duration: 0.6, repeat: 11, yoyo: true, ease: "sine.inOut" }, 43.54);
+  tl.fromTo("#s4 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 43.24);
+  tl.fromTo("#s4 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 43.54);
+  tl.fromTo("#s4 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 49.26);
+  tl.to("#s4 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 49.28);
+  tl.fromTo("#s4 .bg", { x: 0 }, { x: 10, duration: 0.04, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, 49.48);
+  tl.fromTo("#s4 .headline", { color: "#ffffff" }, { color: "hsl(58 100% 65%)", duration: 0.2 }, 49.44);
+
+  // Platz 3
+  tl.fromTo("#s3 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 50.48);
+  tl.fromTo("#s3 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 50.53);
+  tl.fromTo("#s3 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 50.53);
+  tl.fromTo("#s3 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 50.48);
+  tl.to("#s3 .ghost", { y: -120, duration: 5.4, ease: "none" }, 50.48);
+  tl.fromTo("#s3 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 51.23);
+  tl.fromTo("#s3 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 51.43);
+  tl.to("#s3 .icon", { y: -26, duration: 0.6, repeat: 6, yoyo: true, ease: "sine.inOut" }, 51.98);
+  tl.fromTo("#s3 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 51.68);
+  tl.fromTo("#s3 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 51.98);
+  tl.fromTo("#s3 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 54.54);
+  tl.to("#s3 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 54.56);
+  tl.fromTo("#s3 .bg", { x: 0 }, { x: 22, duration: 0.04, repeat: 9, yoyo: true, ease: "none", immediateRender: false }, 54.76);
+
+  // Platz 2
+  tl.fromTo("#s2 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 55.88);
+  tl.fromTo("#s2 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 55.93);
+  tl.fromTo("#s2 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 55.93);
+  tl.fromTo("#s2 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 55.88);
+  tl.to("#s2 .ghost", { y: -120, duration: 5.84, ease: "none" }, 55.88);
+  tl.fromTo("#s2 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 56.63);
+  tl.fromTo("#s2 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 56.83);
+  tl.to("#s2 .icon", { y: -26, duration: 0.6, repeat: 7, yoyo: true, ease: "sine.inOut" }, 57.38);
+  tl.fromTo("#s2 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 57.08);
+  tl.fromTo("#s2 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 57.38);
+  tl.fromTo("#s2 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 60.3);
+  tl.to("#s2 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 60.32);
+  tl.fromTo("#s2 .bg", { x: 0 }, { x: 22, duration: 0.04, repeat: 9, yoyo: true, ease: "none", immediateRender: false }, 60.52);
+
+  // Platz 1
+  tl.fromTo("#s1 .flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 61.72);
+  tl.fromTo("#s1 .rank", { scale: 3.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 61.77);
+  tl.fromTo("#s1 .platz", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 61.77);
+  tl.fromTo("#s1 .ghost", { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.8, ease: "power2.out" }, 61.72);
+  tl.to("#s1 .ghost", { y: -120, duration: 9.08, ease: "none" }, 61.72);
+  tl.fromTo("#s1 .country", { x: -700 }, { x: 0, duration: 0.45, ease: "power4.out" }, 62.47);
+  tl.fromTo("#s1 .icon", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 62.67);
+  tl.to("#s1 .icon", { y: -26, duration: 0.6, repeat: 12, yoyo: true, ease: "sine.inOut" }, 63.22);
+  tl.fromTo("#s1 .headline", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 62.92);
+  tl.fromTo("#s1 .source", { opacity: 0 }, { opacity: 0.8, duration: 0.4 }, 63.22);
+  tl.fromTo("#s1 .stamp", { scale: 3, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.22, ease: "power4.in" }, 66.78);
+  tl.to("#s1 .icon", { opacity: 0, scale: 0.4, duration: 0.15, ease: "power2.in" }, 66.8);
+  tl.fromTo("#s1 .bg", { x: 0 }, { x: 22, duration: 0.04, repeat: 9, yoyo: true, ease: "none", immediateRender: false }, 67);
+
+  tl.fromTo("#s1 .rank", { textShadow: "0 0 0px #ff0000" }, { textShadow: "0 0 80px #ff2020", duration: 0.5, repeat: 16, yoyo: true, ease: "sine.inOut" }, 62.4);
+  tl.fromTo("#s1 .redpulse", { opacity: 0 }, { opacity: 0.55, duration: 0.5, repeat: 16, yoyo: true, ease: "sine.inOut" }, 62.4);
+  tl.to("#s1 .rankwrap", { x: 14, duration: 0.05, repeat: 11, yoyo: true, ease: "none" }, 62.4);
+
+  tl.fromTo("#outro .flash", { opacity: 0.9 }, { opacity: 0, duration: 0.4 }, 70.8);
+  tl.fromTo("#outro .outro-q", { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }, 70.85);
+  tl.fromTo("#outro .outro-arrow", { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "bounce.out" }, 72.9);
+  tl.to("#outro .outro-arrow", { y: 24, duration: 0.35, repeat: 5, yoyo: true, ease: "sine.inOut" }, 73.3);
+  tl.fromTo("#outro .outro-c", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35 }, 72.95);
+  tl.fromTo("#meter", { y: -200 }, { y: 0, duration: 0.5, ease: "power3.out" }, 4.4);
+  tl.fromTo("#seg0", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 4.5);
+  tl.fromTo("#seg1", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 11.18);
+  tl.fromTo("#seg2", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 16.82);
+  tl.fromTo("#seg3", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 22.62);
+  tl.fromTo("#seg4", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 29.38);
+  tl.fromTo("#seg5", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 35.62);
+  tl.fromTo("#seg6", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 42.14);
+  tl.fromTo("#seg7", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 50.58);
+  tl.fromTo("#seg8", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 55.98);
+  tl.fromTo("#seg9", { opacity: 0.12, scaleY: 0.5 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "back.out(3)" }, 61.82);
+  tl.fromTo("#cap0", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 4.44);
+  tl.fromTo("#w0_0", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 4.48);
+  tl.fromTo("#w0_1", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 4.88);
+  tl.fromTo("#cap1", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 5.6);
+  tl.fromTo("#w1_0", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 5.64);
+  tl.fromTo("#w1_1", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 5.72);
+  tl.fromTo("#w1_2", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 5.92);
+  tl.fromTo("#cap2", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 6.36);
+  tl.fromTo("#w2_0", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 6.4);
+  tl.fromTo("#w2_1", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 6.64);
+  tl.fromTo("#w2_2", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 6.8);
+  tl.fromTo("#cap3", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 6.92);
+  tl.fromTo("#w3_0", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 6.96);
+  tl.fromTo("#w3_1", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 7.76);
+  tl.fromTo("#w3_2", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 8.12);
+  tl.fromTo("#cap4", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 8.36);
+  tl.fromTo("#w4_0", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 8.4);
+  tl.fromTo("#cap5", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 9);
+  tl.fromTo("#w5_0", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 9.04);
+  tl.fromTo("#w5_1", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 9.2);
+  tl.fromTo("#w5_2", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 9.52);
+  tl.fromTo("#cap6", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 9.6);
+  tl.fromTo("#w6_0", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 9.64);
+  tl.fromTo("#w6_1", { color: "#ffffff", scale: 1 }, { color: "hsl(175 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 10.12);
+  tl.fromTo("#cap7", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 11.08);
+  tl.fromTo("#w7_0", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 11.12);
+  tl.fromTo("#w7_1", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 11.52);
+  tl.fromTo("#cap8", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 12.16);
+  tl.fromTo("#w8_0", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 12.2);
+  tl.fromTo("#w8_1", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 12.32);
+  tl.fromTo("#w8_2", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 13);
+  tl.fromTo("#cap9", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 13.12);
+  tl.fromTo("#w9_0", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 13.16);
+  tl.fromTo("#w9_1", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 13.6);
+  tl.fromTo("#w9_2", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 14.04);
+  tl.fromTo("#cap10", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 14.76);
+  tl.fromTo("#w10_0", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 14.8);
+  tl.fromTo("#w10_1", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 14.96);
+  tl.fromTo("#w10_2", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 15.36);
+  tl.fromTo("#cap11", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 15.68);
+  tl.fromTo("#w11_0", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 15.72);
+  tl.fromTo("#w11_1", { color: "#ffffff", scale: 1 }, { color: "hsl(156 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 16.08);
+  tl.fromTo("#cap12", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 16.72);
+  tl.fromTo("#w12_0", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 16.76);
+  tl.fromTo("#w12_1", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 17.2);
+  tl.fromTo("#cap13", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 17.88);
+  tl.fromTo("#w13_0", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 17.92);
+  tl.fromTo("#w13_1", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 18.08);
+  tl.fromTo("#w13_2", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 18.6);
+  tl.fromTo("#cap14", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 18.76);
+  tl.fromTo("#w14_0", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 18.8);
+  tl.fromTo("#w14_1", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 19.04);
+  tl.fromTo("#w14_2", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 19.68);
+  tl.fromTo("#cap15", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 20.24);
+  tl.fromTo("#w15_0", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 20.28);
+  tl.fromTo("#w15_1", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 20.48);
+  tl.fromTo("#w15_2", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 21.04);
+  tl.fromTo("#cap16", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 21.32);
+  tl.fromTo("#w16_0", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 21.36);
+  tl.fromTo("#w16_1", { color: "#ffffff", scale: 1 }, { color: "hsl(136 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 21.76);
+  tl.fromTo("#cap17", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 22.52);
+  tl.fromTo("#w17_0", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 22.56);
+  tl.fromTo("#w17_1", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 22.96);
+  tl.fromTo("#cap18", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 23.64);
+  tl.fromTo("#w18_0", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 23.68);
+  tl.fromTo("#w18_1", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 24);
+  tl.fromTo("#w18_2", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 24.32);
+  tl.fromTo("#cap19", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 24.56);
+  tl.fromTo("#w19_0", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 24.6);
+  tl.fromTo("#w19_1", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 24.84);
+  tl.fromTo("#w19_2", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 25.24);
+  tl.fromTo("#cap20", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 25.44);
+  tl.fromTo("#w20_0", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 25.48);
+  tl.fromTo("#w20_1", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 26.16);
+  tl.fromTo("#cap21", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 26.72);
+  tl.fromTo("#w21_0", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 26.76);
+  tl.fromTo("#w21_1", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 27);
+  tl.fromTo("#w21_2", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 27.12);
+  tl.fromTo("#cap22", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 27.6);
+  tl.fromTo("#w22_0", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 27.64);
+  tl.fromTo("#w22_1", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 27.88);
+  tl.fromTo("#w22_2", { color: "#ffffff", scale: 1 }, { color: "hsl(117 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 28.08);
+  tl.fromTo("#cap23", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 29.28);
+  tl.fromTo("#w23_0", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 29.32);
+  tl.fromTo("#w23_1", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 29.68);
+  tl.fromTo("#cap24", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 30.44);
+  tl.fromTo("#w24_0", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 30.48);
+  tl.fromTo("#w24_1", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 30.64);
+  tl.fromTo("#w24_2", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 31.28);
+  tl.fromTo("#cap25", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 31.4);
+  tl.fromTo("#w25_0", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 31.44);
+  tl.fromTo("#w25_1", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 31.6);
+  tl.fromTo("#w25_2", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 32);
+  tl.fromTo("#cap26", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 32.2);
+  tl.fromTo("#w26_0", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 32.24);
+  tl.fromTo("#w26_1", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 32.8);
+  tl.fromTo("#w26_2", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 33.12);
+  tl.fromTo("#cap27", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 34.6);
+  tl.fromTo("#w27_0", { color: "#ffffff", scale: 1 }, { color: "hsl(97 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 34.64);
+  tl.fromTo("#cap28", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 35.52);
+  tl.fromTo("#w28_0", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 35.56);
+  tl.fromTo("#w28_1", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 35.92);
+  tl.fromTo("#cap29", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 36.733);
+  tl.fromTo("#w29_0", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 36.773);
+  tl.fromTo("#w29_1", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 36.88);
+  tl.fromTo("#w29_2", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 37.36);
+  tl.fromTo("#cap30", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 37.6);
+  tl.fromTo("#w30_0", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 37.64);
+  tl.fromTo("#w30_1", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 37.76);
+  tl.fromTo("#w30_2", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 38.4);
+  tl.fromTo("#cap31", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 38.8);
+  tl.fromTo("#w31_0", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 38.84);
+  tl.fromTo("#w31_1", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 39.24);
+  tl.fromTo("#w31_2", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 39.76);
+  tl.fromTo("#cap32", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 40.44);
+  tl.fromTo("#w32_0", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 40.48);
+  tl.fromTo("#w32_1", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 40.693);
+  tl.fromTo("#w32_2", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 41.36);
+  tl.fromTo("#cap33", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 41.48);
+  tl.fromTo("#w33_0", { color: "#ffffff", scale: 1 }, { color: "hsl(78 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 41.52);
+  tl.fromTo("#cap34", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 42.04);
+  tl.fromTo("#w34_0", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 42.08);
+  tl.fromTo("#w34_1", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 42.48);
+  tl.fromTo("#cap35", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 43.208);
+  tl.fromTo("#w35_0", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 43.248);
+  tl.fromTo("#w35_1", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 43.36);
+  tl.fromTo("#w35_2", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 43.92);
+  tl.fromTo("#cap36", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 44.2);
+  tl.fromTo("#w36_0", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 44.24);
+  tl.fromTo("#w36_1", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 44.36);
+  tl.fromTo("#w36_2", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 44.8);
+  tl.fromTo("#cap37", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 44.96);
+  tl.fromTo("#w37_0", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 45);
+  tl.fromTo("#w37_1", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 45.44);
+  tl.fromTo("#w37_2", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 45.68);
+  tl.fromTo("#cap38", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 45.88);
+  tl.fromTo("#w38_0", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 45.92);
+  tl.fromTo("#w38_1", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 46.56);
+  tl.fromTo("#w38_2", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 46.88);
+  tl.fromTo("#cap39", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 47.52);
+  tl.fromTo("#w39_0", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 47.56);
+  tl.fromTo("#w39_1", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 47.84);
+  tl.fromTo("#cap40", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 48.44);
+  tl.fromTo("#w40_0", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 48.48);
+  tl.fromTo("#w40_1", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 48.72);
+  tl.fromTo("#w40_2", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 48.96);
+  tl.fromTo("#cap41", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 49.4);
+  tl.fromTo("#w41_0", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 49.44);
+  tl.fromTo("#w41_1", { color: "#ffffff", scale: 1 }, { color: "hsl(58 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 49.92);
+  tl.fromTo("#cap42", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 50.48);
+  tl.fromTo("#w42_0", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 50.52);
+  tl.fromTo("#w42_1", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 50.88);
+  tl.fromTo("#cap43", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 51.6);
+  tl.fromTo("#w43_0", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 51.64);
+  tl.fromTo("#w43_1", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 51.76);
+  tl.fromTo("#w43_2", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 52.32);
+  tl.fromTo("#cap44", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 52.52);
+  tl.fromTo("#w44_0", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 52.56);
+  tl.fromTo("#w44_1", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 52.8);
+  tl.fromTo("#w44_2", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 53.84);
+  tl.fromTo("#cap45", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 53.96);
+  tl.fromTo("#w45_0", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 54);
+  tl.fromTo("#w45_1", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 54.72);
+  tl.fromTo("#w45_2", { color: "#ffffff", scale: 1 }, { color: "hsl(39 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 54.88);
+  tl.fromTo("#cap46", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 55.88);
+  tl.fromTo("#w46_0", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 55.92);
+  tl.fromTo("#w46_1", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 56.4);
+  tl.fromTo("#cap47", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 57.04);
+  tl.fromTo("#w47_0", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 57.08);
+  tl.fromTo("#w47_1", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 57.2);
+  tl.fromTo("#w47_2", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 58.08);
+  tl.fromTo("#cap48", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 58.36);
+  tl.fromTo("#w48_0", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 58.4);
+  tl.fromTo("#w48_1", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 58.8);
+  tl.fromTo("#w48_2", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 59.04);
+  tl.fromTo("#cap49", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 59.36);
+  tl.fromTo("#w49_0", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 59.4);
+  tl.fromTo("#w49_1", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 59.52);
+  tl.fromTo("#w49_2", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 59.68);
+  tl.fromTo("#cap50", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 60.44);
+  tl.fromTo("#w50_0", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 60.48);
+  tl.fromTo("#w50_1", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 60.8);
+  tl.fromTo("#w50_2", { color: "#ffffff", scale: 1 }, { color: "hsl(19 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 61.12);
+  tl.fromTo("#cap51", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 61.72);
+  tl.fromTo("#w51_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 61.76);
+  tl.fromTo("#w51_1", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 62);
+  tl.fromTo("#w51_2", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 62.4);
+  tl.fromTo("#cap52", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 63.12);
+  tl.fromTo("#w52_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 63.16);
+  tl.fromTo("#w52_1", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 63.28);
+  tl.fromTo("#w52_2", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 64);
+  tl.fromTo("#cap53", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 64.28);
+  tl.fromTo("#w53_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 64.32);
+  tl.fromTo("#w53_1", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 64.48);
+  tl.fromTo("#w53_2", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 64.64);
+  tl.fromTo("#cap54", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 65.16);
+  tl.fromTo("#w54_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 65.2);
+  tl.fromTo("#w54_1", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 66.16);
+  tl.fromTo("#w54_2", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 66.76);
+  tl.fromTo("#cap55", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 66.92);
+  tl.fromTo("#w55_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 66.96);
+  tl.fromTo("#cap56", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 68.04);
+  tl.fromTo("#w56_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 68.08);
+  tl.fromTo("#w56_1", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 68.24);
+  tl.fromTo("#w56_2", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 68.4);
+  tl.fromTo("#cap57", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 68.56);
+  tl.fromTo("#w57_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 68.6);
+  tl.fromTo("#cap58", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 69.053);
+  tl.fromTo("#w58_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 69.093);
+  tl.fromTo("#w58_1", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 69.28);
+  tl.fromTo("#w58_2", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 69.44);
+  tl.fromTo("#cap59", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, ease: "back.out(2)" }, 70.04);
+  tl.fromTo("#w59_0", { color: "#ffffff", scale: 1 }, { color: "hsl(0 100% 62%)", scale: 1.06, duration: 0.08, immediateRender: false }, 70.08);
+
+  window.__timelines["main"] = tl;
+  tl.seek(0);
+    </script>
+  </body>
+</html>
