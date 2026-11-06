@@ -1,4 +1,10 @@
-# Sprechertext "Blinder Fleck" (TikTok, 36,7 Sek.)
+# Sprechertext "Blinder Fleck" (TikTok)
+
+Das Video ist auf das ElevenLabs-Voiceover in `public/voiceover.mp3` abgestimmt.
+In `audio/voiceover_timed.wav` ist bei 18,5 s eine zusätzliche Pause von 2 s eingefügt (Zeit für den Test).
+Die Szenenzeiten stehen in `src/theme.ts`, die genauen Einsätze als Kommentare in den Szenen.
+
+## Ursprüngliche Planung (36,7 Sek.)
 
 Die Zeiten passen exakt zu den Szenen im Video. Wenn du selbst sprichst oder eine KI-Stimme nutzt,
 orientiere dich an den Zeitmarken. Danach: Datei als `public/voiceover.mp3` speichern und
@@ -27,8 +33,6 @@ orientiere dich an den Zeitmarken. Danach: Datei als `public/voiceover.mp3` spei
 ```bash
 npm i
 npx remotion render BlinderFleck out/video_stumm.mp4
-./mix.sh                       # nur Sounddesign
-./mix.sh public/voiceover.mp3  # mit Voiceover
+./make_sfx.sh                          # Sounddesign neu erzeugen
+./mix.sh audio/voiceover_timed.wav     # Stimme + Sounddesign drunterlegen
 ```
-
-Szenenlängen lassen sich zentral in `src/theme.ts` (`SCENES`) anpassen.

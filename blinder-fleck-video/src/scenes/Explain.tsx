@@ -1,7 +1,19 @@
 import React from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
-import { C, FONT } from "../theme";
-import { Words } from "../Words";
+import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { C, FONT, sec } from "../theme";
+import { Emoji } from "../Emoji";
+
+// VO-Zeiten relativ zum Szenenstart (22,6 s)
+const T = {
+  intro: sec(0.1), // "Das ist dein blinder Fleck!"
+  nerve: sec(1.6), // "Genau da, wo der Sehnerv dein Auge verlässt,"
+  noCells: sec(4.1), // "hast du keine einzige Sehzelle."
+  blind: sec(6.55), // "Diese Stelle ist komplett blind."
+  brain: sec(8.85), // "Und dein Gehirn?"
+  paint: sec(9.85), // "Malt die Lücke einfach zu."
+  fill: sec(11.4), // "Mit dem, was es erwartet."
+  invent: sec(13.1), // "Es erfindet also gerade ein Stück von deinem Bild."
+};
 
 const cl = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
@@ -14,9 +26,9 @@ const discY = CY + R * Math.sin(DISC_ANGLE);
 const foveaX = CX + R;
 
 const EyeSection: React.FC<{ frame: number }> = ({ frame }) => {
-  const ray = interpolate(frame, [10, 50], [1, 0], cl);
-  const nerveGlow = interpolate(frame, [30, 45, 90, 100], [0, 1, 1, 0.4], cl);
-  const ring = interpolate(frame, [100, 115], [0, 1], cl);
+  const ray = interpolate(frame, [T.intro, T.intro + 40], [1, 0], cl);
+  const nerveGlow = interpolate(frame, [T.nerve, T.nerve + 12, T.noCells, T.noCells + 10], [0, 1, 1, 0.4], cl);
+  const ring = interpolate(frame, [T.noCells, T.noCells + 15], [0, 1], cl);
   const ringPulse = 1 + 0.12 * Math.sin(frame / 4);
   const rays = [-120, -60, 0, 60, 120];
   return (
@@ -81,8 +93,12 @@ const EyeSection: React.FC<{ frame: number }> = ({ frame }) => {
 // Gestreiftes Muster mit Loch, das "aufgefüllt" wird
 const FillIn: React.FC<{ frame: number }> = ({ frame }) => {
   const appear = interpolate(frame, [0, 12], [0, 1], cl);
-  const hole = interpolate(frame, [30, 62], [1, 0], cl);
-  const sweep = interpolate(frame, [30, 62], [0, 360], cl);
+  const F0 = T.fill - T.paint;
+  const F1 = F0 + sec(1.3);
+  const hole = interpolate(frame, [F0, F1], [1, 0], cl);
+  const sweep = interpolate(frame, [F0, F1], [0, 720], cl);
+  const inv = interpolate(frame, [T.invent - T.paint, T.invent - T.paint + 12], [0, 1], cl);
+  const brush = interpolate(frame, [F0 - 10, F1], [0, Math.PI * 4], cl);
   return (
     <div
       style={{
@@ -110,7 +126,7 @@ const FillIn: React.FC<{ frame: number }> = ({ frame }) => {
           opacity: hole,
         }}
       />
-      {frame >= 30 && frame < 66 && (
+      {frame >= F0 && frame < F1 + 4 && (
         <div
           style={{
             position: "absolute",
@@ -125,44 +141,83 @@ const FillIn: React.FC<{ frame: number }> = ({ frame }) => {
           }}
         />
       )}
+      {/* "erfundener" Bereich */}
+      <div
+        style={{
+          position: "absolute",
+          left: 235,
+          top: 235,
+          width: 330,
+          height: 330,
+          borderRadius: "50%",
+          border: `10px dashed ${C.red}`,
+          opacity: inv,
+          scale: String(1 + 0.04 * Math.sin(frame / 5)),
+        }}
+      />
+      {frame >= F0 - 10 && frame < F1 + 6 && (
+        <div style={{ position: "absolute", left: 340 + Math.cos(brush) * 110, top: 300 + Math.sin(brush) * 110 }}>
+          <Emoji e="🖌️" size={150} />
+        </div>
+      )}
+      {inv > 0 && (
+        <div style={{ position: "absolute", left: 520, top: 170, opacity: inv, scale: String(0.8 + 0.2 * Math.sin(frame / 6)) }}>
+          <Emoji e="✨" size={130} />
+        </div>
+      )}
     </div>
   );
 };
 
 export const Explain: React.FC = () => {
   const frame = useCurrentFrame();
-  const eyeOpacity = interpolate(frame, [0, 12, 165, 180], [0, 1, 1, 0], cl);
+  const { fps } = useVideoConfig();
+  const eyeOpacity = interpolate(frame, [0, 8, T.brain - 6, T.brain], [0, 1, 1, 0], cl);
+  const zoom = interpolate(frame, [T.blind, T.blind + 25], [1, 2.4], { ...cl, easing: (t) => 1 - Math.pow(1 - t, 3) });
+  const darken = interpolate(frame, [T.blind + 10, T.blind + 30], [0, 0.55], cl);
+  const brainIn = spring({ frame: frame - T.brain, fps, config: { damping: 10, stiffness: 170 } });
+  const brainMove = spring({ frame: frame - T.paint, fps, config: { damping: 16, stiffness: 120 } });
   return (
     <AbsoluteFill style={{ backgroundColor: C.bg }}>
       <AbsoluteFill style={{ background: "radial-gradient(circle at 50% 40%, #16233a 0%, #07080c 65%)" }} />
-      <AbsoluteFill style={{ opacity: eyeOpacity }}>
-        <EyeSection frame={frame} />
-        {frame >= 100 && (
+      <AbsoluteFill style={{ opacity: eyeOpacity, translate: "0px 120px" }}>
+        <AbsoluteFill style={{ scale: String(zoom), transformOrigin: `${discX}px ${discY - 100}px` }}>
+          <EyeSection frame={frame} />
+          {frame >= T.noCells && (
+            <div
+              style={{
+                position: "absolute",
+                left: discX - 330,
+                top: discY + 110,
+                fontFamily: FONT,
+                fontWeight: 900,
+                fontSize: 60,
+                color: C.red,
+                textShadow: "0 4px 0 rgba(0,0,0,0.6)",
+                opacity: interpolate(frame, [T.noCells, T.noCells + 12], [0, 1], cl) * (1 - darken / 0.55),
+              }}
+            >
+              Blinder Fleck
+            </div>
+          )}
+        </AbsoluteFill>
+        <AbsoluteFill style={{ backgroundColor: "#000", opacity: darken }} />
+      </AbsoluteFill>
+
+      {frame >= T.paint && <FillIn frame={frame - T.paint} />}
+
+      {frame >= T.brain && (
+        <AbsoluteFill style={{ justifyContent: "center", alignItems: "center" }}>
           <div
             style={{
-              position: "absolute",
-              left: discX - 300,
-              top: discY + 100,
-              fontFamily: FONT,
-              fontWeight: 900,
-              fontSize: 56,
-              color: C.red,
-              textShadow: "0 4px 0 rgba(0,0,0,0.6)",
-              opacity: interpolate(frame, [100, 112], [0, 1], cl),
+              scale: String(brainIn * interpolate(brainMove, [0, 1], [1, 0.42])),
+              translate: `${interpolate(brainMove, [0, 1], [0, 0])}px ${interpolate(brainMove, [0, 1], [-60, 520])}px`,
             }}
           >
-            Blinder Fleck
+            <Emoji e="🧠" size={520} />
           </div>
-        )}
-      </AbsoluteFill>
-      {frame >= 170 && <FillIn frame={frame - 170} />}
-
-      <AbsoluteFill style={{ top: 1180, paddingLeft: 90, paddingRight: 90 }}>
-        <Words text="Hier verlässt der Sehnerv dein Auge." start={0} end={100} size={88} highlight={["Sehnerv"]} />
-        <Words text="Keine einzige Sehzelle." start={100} end={170} size={110} highlight={["Keine"]} highlightColor={C.red} />
-        <Words text="Dein Gehirn malt die Lücke einfach zu." start={175} end={235} size={88} highlight={["malt", "Lücke"]} />
-        <Words text="Es erfindet ein Stück deines Bildes." start={235} size={92} highlight={["erfindet"]} />
-      </AbsoluteFill>
+        </AbsoluteFill>
+      )}
     </AbsoluteFill>
   );
 };

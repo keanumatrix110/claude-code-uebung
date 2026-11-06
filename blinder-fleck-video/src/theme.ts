@@ -13,14 +13,17 @@ export const C = {
 
 export const FONT = "Inter, 'Noto Color Emoji', sans-serif";
 
-// Szenenlängen in Frames (30 fps). Hier anpassen, wenn das Voiceover anders getaktet ist.
+// Szenenlängen in Frames (30 fps), exakt auf audio/voiceover_timed.wav abgestimmt.
 export const SCENES = {
-  hook: 100,
-  proof: 60,
-  test: 360,
-  explain: 300,
-  octopus: 150,
-  cta: 130,
+  hook: 132, // 0,0 bis 4,4 s
+  proof: 63, // 4,4 bis 6,5 s
+  test: 483, // 6,5 bis 22,6 s
+  explain: 477, // 22,6 bis 38,5 s
+  octopus: 177, // 38,5 bis 44,4 s
+  cta: 150, // 44,4 bis 49,4 s
 };
+
+// Sekunden in Frames
+export const sec = (s: number) => Math.round(s * FPS);
 
 export const TOTAL = Object.values(SCENES).reduce((a, b) => a + b, 0);

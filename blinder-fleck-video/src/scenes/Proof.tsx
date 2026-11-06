@@ -1,31 +1,31 @@
 import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { C, FONT } from "../theme";
-import { Words } from "../Words";
+import { C, sec } from "../theme";
+import { Emoji } from "../Emoji";
+
+// VO: "Ich beweis es dir." 0,3 bis 1,2 s | "Jetzt." ab 1,4 s
+const NOW = sec(1.38);
 
 export const Proof: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - 22, fps, config: { damping: 8, stiffness: 260 } });
-  const shake = frame > 22 && frame < 34 ? Math.sin(frame * 3) * 12 : 0;
+  const inS = spring({ frame, fps, config: { damping: 12, stiffness: 180 } });
+  const punch = spring({ frame: frame - NOW, fps, config: { damping: 7, stiffness: 300 } });
+  const shake = frame >= NOW && frame < NOW + 12 ? Math.sin(frame * 3) * 16 : 0;
+  const flash = interpolate(frame, [NOW, NOW + 6], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill style={{ backgroundColor: C.yellow, justifyContent: "center", alignItems: "center" }}>
-      <Words text="Ich beweis es dir." start={0} size={100} style={{ color: C.bg }} noShadow />
-      <div
+    <AbsoluteFill style={{ backgroundColor: C.yellow }}>
+      <AbsoluteFill
         style={{
-          fontFamily: FONT,
-          fontWeight: 900,
-          fontSize: 300,
-          color: C.bg,
-          letterSpacing: -8,
-          marginTop: 30,
-          scale: String(interpolate(s, [0, 1], [2.4, 1])),
-          opacity: s > 0.01 ? 1 : 0,
-          translate: `${shake}px 0px`,
+          justifyContent: "center",
+          alignItems: "center",
+          translate: `${shake}px -80px`,
+          scale: String(interpolate(inS, [0, 1], [0.3, 1]) * (frame >= NOW ? interpolate(punch, [0, 1], [1.6, 1.15]) : 1)),
         }}
       >
-        JETZT.
-      </div>
+        <Emoji e="🫵" size={620} />
+      </AbsoluteFill>
+      {frame >= NOW && <AbsoluteFill style={{ backgroundColor: "#fff", opacity: flash }} />}
     </AbsoluteFill>
   );
 };

@@ -1,7 +1,10 @@
 import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { C } from "../theme";
-import { Words } from "../Words";
+import { sec } from "../theme";
+import { Emoji } from "../Emoji";
+
+// VO-Zeiten relativ zum Szenenstart (38,5 s)
+const T = { intro: sec(0.15), noProblem: sec(1.35), wired: sec(2.95) };
 
 const Octo: React.FC<{ frame: number }> = ({ frame }) => {
   const tentacles = Array.from({ length: 8 }, (_, i) => i);
@@ -38,25 +41,35 @@ const Octo: React.FC<{ frame: number }> = ({ frame }) => {
 export const Octopus: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = spring({ frame, fps, config: { damping: 12, stiffness: 140 } });
+  const s = spring({ frame: frame - T.intro, fps, config: { damping: 12, stiffness: 140 } });
+  const check = spring({ frame: frame - T.noProblem, fps, config: { damping: 8, stiffness: 220 } });
+  const plug = spring({ frame: frame - T.wired, fps, config: { damping: 10, stiffness: 180 } });
   const bob = Math.sin(frame / 12) * 18;
   return (
     <AbsoluteFill style={{ backgroundColor: "#061a2b" }}>
-      <AbsoluteFill style={{ background: "radial-gradient(circle at 50% 35%, #0d4a6e 0%, #061a2b 70%)" }} />
+      <AbsoluteFill style={{ background: "radial-gradient(circle at 50% 42%, #0d4a6e 0%, #061a2b 70%)" }} />
       <AbsoluteFill
         style={{
+          justifyContent: "center",
           alignItems: "center",
-          top: 260,
           scale: String(interpolate(s, [0, 1], [0.4, 1])),
-          translate: `0px ${bob + (1 - s) * 400}px`,
+          translate: `0px ${bob + (1 - s) * 500 - 80}px`,
         }}
       >
-        <Octo frame={frame} />
-      </AbsoluteFill>
-      <AbsoluteFill style={{ top: 1100, paddingLeft: 90, paddingRight: 90 }}>
-        <Words text="Und ein Oktopus?" start={0} end={45} size={110} highlight={["Oktopus"]} highlightColor={C.cyan} />
-        <Words text="KEIN blinder Fleck." start={45} end={150} size={120} highlight={["KEIN"]} highlightColor={C.yellow} />
-        <Words text="Seine Augen sind besser verkabelt als unsere." start={80} size={64} highlight={["besser"]} style={{ marginTop: 24 }} />
+        <div style={{ position: "relative" }}>
+          <Octo frame={frame} />
+          <div style={{ position: "absolute", right: -20, top: 0, scale: String(check), opacity: check > 0.01 ? 1 : 0 }}>
+            <Emoji e="✅" size={210} />
+          </div>
+          <div style={{ position: "absolute", left: -30, top: 40, scale: String(plug), rotate: `${(1 - plug) * -60}deg`, opacity: plug > 0.01 ? 1 : 0 }}>
+            <Emoji e="🔌" size={170} />
+          </div>
+          {frame >= T.wired && (
+            <div style={{ position: "absolute", left: 300, top: 180, opacity: 0.5 + 0.5 * Math.sin(frame / 3) }}>
+              <Emoji e="✨" size={120} />
+            </div>
+          )}
+        </div>
       </AbsoluteFill>
     </AbsoluteFill>
   );
