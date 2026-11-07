@@ -28,11 +28,20 @@ orientiere dich an den Zeitmarken. Danach: Datei als `public/voiceover.mp3` spei
 | 0:30,0 | Seine Augen sind einfach besser verkabelt als unsere. | locker |
 | 0:32,3 | Hat's bei dir geklappt? Schreib "weg" oder "nicht weg" in die Kommentare. | direkt, freundlich |
 
-## Video neu rendern (nach Änderungen)
+## Videos neu rendern (nach Änderungen)
 
 ```bash
 npm i
+
+# Blinder Fleck
 npx remotion render BlinderFleck out/video_stumm.mp4
-./make_sfx.sh                          # Sounddesign neu erzeugen
-./mix.sh audio/voiceover_timed.wav     # Stimme + Sounddesign drunterlegen
+./make_sfx.sh
+./mix.sh out/video_stumm.mp4 audio/sfx.wav audio/voiceover_timed.wav export/blinder-fleck_mit_voiceover.mp4
+
+# Schmerz zweimal
+npx remotion render SchmerzZweimal out/schmerz_stumm.mp4
+./make_sfx_schmerz.sh
+./mix.sh out/schmerz_stumm.mp4 audio/sfx_schmerz.wav public/voiceover_schmerz.mp3 export/schmerz-zweimal_mit_voiceover.mp4
 ```
+
+Szenenzeiten: `src/theme.ts` (Blinder Fleck) und `src/schmerz/timing.ts` (Schmerz zweimal).

@@ -8,6 +8,8 @@ import { Test } from "./scenes/Test";
 import { Explain } from "./scenes/Explain";
 import { Octopus } from "./scenes/Octopus";
 import { Cta } from "./scenes/Cta";
+import { SchmerzZweimal } from "./schmerz/SchmerzZweimal";
+import { SZ_TOTAL } from "./schmerz/timing";
 
 const scenes = [
   ["Hook", Hook, SCENES.hook],
@@ -26,5 +28,6 @@ export const RemotionRoot: React.FC = () => (
       ))}
     </Folder>
     <Composition id="BlinderFleck" component={BlinderFleck} durationInFrames={TOTAL} fps={FPS} width={W} height={H} />
+    <Composition id="SchmerzZweimal" component={SchmerzZweimal} durationInFrames={SZ_TOTAL} fps={FPS} width={W} height={H} />
   </>
 );
