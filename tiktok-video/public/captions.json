@@ -1,0 +1,1143 @@
+[
+ {
+  "text": " Du",
+  "startMs": 0,
+  "endMs": 180,
+  "timestampMs": 0,
+  "confidence": 0.809
+ },
+ {
+  "text": " hast",
+  "startMs": 180,
+  "endMs": 360,
+  "timestampMs": 180,
+  "confidence": 0.997
+ },
+ {
+  "text": " in",
+  "startMs": 360,
+  "endMs": 540,
+  "timestampMs": 360,
+  "confidence": 0.992
+ },
+ {
+  "text": " deinem",
+  "startMs": 540,
+  "endMs": 780,
+  "timestampMs": 540,
+  "confidence": 0.998
+ },
+ {
+  "text": " ganzen",
+  "startMs": 780,
+  "endMs": 1180,
+  "timestampMs": 780,
+  "confidence": 0.991
+ },
+ {
+  "text": " Leben",
+  "startMs": 1180,
+  "endMs": 1580,
+  "timestampMs": 1180,
+  "confidence": 0.995
+ },
+ {
+  "text": " noch",
+  "startMs": 1580,
+  "endMs": 1860,
+  "timestampMs": 1580,
+  "confidence": 0.993
+ },
+ {
+  "text": " nie",
+  "startMs": 1860,
+  "endMs": 2240,
+  "timestampMs": 1860,
+  "confidence": 0.997
+ },
+ {
+  "text": " etwas",
+  "startMs": 2240,
+  "endMs": 2600,
+  "timestampMs": 2240,
+  "confidence": 0.989
+ },
+ {
+  "text": " berührt.",
+  "startMs": 2600,
+  "endMs": 3080,
+  "timestampMs": 2600,
+  "confidence": 0.991
+ },
+ {
+  "text": " Nicht",
+  "startMs": 3580,
+  "endMs": 3720,
+  "timestampMs": 3580,
+  "confidence": 0.977
+ },
+ {
+  "text": " dein",
+  "startMs": 3720,
+  "endMs": 3940,
+  "timestampMs": 3720,
+  "confidence": 0.985
+ },
+ {
+  "text": " Handy,",
+  "startMs": 3940,
+  "endMs": 4280,
+  "timestampMs": 3940,
+  "confidence": 0.996
+ },
+ {
+  "text": " nicht",
+  "startMs": 4700,
+  "endMs": 4800,
+  "timestampMs": 4700,
+  "confidence": 0.981
+ },
+ {
+  "text": " deinen",
+  "startMs": 4800,
+  "endMs": 5040,
+  "timestampMs": 4800,
+  "confidence": 0.795
+ },
+ {
+  "text": " Stuhl,",
+  "startMs": 5040,
+  "endMs": 5480,
+  "timestampMs": 5040,
+  "confidence": 0.998
+ },
+ {
+  "text": " nicht",
+  "startMs": 5840,
+  "endMs": 5980,
+  "timestampMs": 5840,
+  "confidence": 0.993
+ },
+ {
+  "text": " mal",
+  "startMs": 5980,
+  "endMs": 6180,
+  "timestampMs": 5980,
+  "confidence": 0.976
+ },
+ {
+  "text": " einen",
+  "startMs": 6180,
+  "endMs": 6400,
+  "timestampMs": 6180,
+  "confidence": 0.982
+ },
+ {
+  "text": " anderen",
+  "startMs": 6400,
+  "endMs": 6660,
+  "timestampMs": 6400,
+  "confidence": 0.999
+ },
+ {
+  "text": " Menschen.",
+  "startMs": 6660,
+  "endMs": 7060,
+  "timestampMs": 6660,
+  "confidence": 0.999
+ },
+ {
+  "text": " Klingt",
+  "startMs": 7560,
+  "endMs": 7820,
+  "timestampMs": 7560,
+  "confidence": 0.982
+ },
+ {
+  "text": " verrückt?",
+  "startMs": 7820,
+  "endMs": 8220,
+  "timestampMs": 7820,
+  "confidence": 0.998
+ },
+ {
+  "text": " Dann",
+  "startMs": 8720,
+  "endMs": 8820,
+  "timestampMs": 8720,
+  "confidence": 0.973
+ },
+ {
+  "text": " schau",
+  "startMs": 8820,
+  "endMs": 9060,
+  "timestampMs": 8820,
+  "confidence": 0.993
+ },
+ {
+  "text": " genau",
+  "startMs": 9060,
+  "endMs": 9400,
+  "timestampMs": 9060,
+  "confidence": 0.999
+ },
+ {
+  "text": " hin.",
+  "startMs": 9400,
+  "endMs": 9680,
+  "timestampMs": 9400,
+  "confidence": 0.997
+ },
+ {
+  "text": " Alles",
+  "startMs": 10180,
+  "endMs": 10440,
+  "timestampMs": 10180,
+  "confidence": 0.932
+ },
+ {
+  "text": " besteht",
+  "startMs": 10440,
+  "endMs": 10880,
+  "timestampMs": 10440,
+  "confidence": 0.996
+ },
+ {
+  "text": " aus",
+  "startMs": 10880,
+  "endMs": 11180,
+  "timestampMs": 10880,
+  "confidence": 0.999
+ },
+ {
+  "text": " Atomen.",
+  "startMs": 11180,
+  "endMs": 11700,
+  "timestampMs": 11180,
+  "confidence": 0.982
+ },
+ {
+  "text": " Und",
+  "startMs": 12120,
+  "endMs": 12200,
+  "timestampMs": 12120,
+  "confidence": 0.913
+ },
+ {
+  "text": " ein",
+  "startMs": 12200,
+  "endMs": 12360,
+  "timestampMs": 12200,
+  "confidence": 0.998
+ },
+ {
+  "text": " Atom",
+  "startMs": 12360,
+  "endMs": 12740,
+  "timestampMs": 12360,
+  "confidence": 0.994
+ },
+ {
+  "text": " ist",
+  "startMs": 12740,
+  "endMs": 13100,
+  "timestampMs": 12740,
+  "confidence": 0.992
+ },
+ {
+  "text": " fast",
+  "startMs": 13100,
+  "endMs": 13460,
+  "timestampMs": 13100,
+  "confidence": 0.993
+ },
+ {
+  "text": " vollständig",
+  "startMs": 13460,
+  "endMs": 14320,
+  "timestampMs": 13460,
+  "confidence": 0.999
+ },
+ {
+  "text": " leer.",
+  "startMs": 14320,
+  "endMs": 14560,
+  "timestampMs": 14320,
+  "confidence": 0.988
+ },
+ {
+  "text": " Wäre",
+  "startMs": 15020,
+  "endMs": 15240,
+  "timestampMs": 15020,
+  "confidence": 0.927
+ },
+ {
+  "text": " der",
+  "startMs": 15240,
+  "endMs": 15400,
+  "timestampMs": 15240,
+  "confidence": 0.998
+ },
+ {
+  "text": " Atomkern",
+  "startMs": 15400,
+  "endMs": 16100,
+  "timestampMs": 15400,
+  "confidence": 0.945
+ },
+ {
+  "text": " eine",
+  "startMs": 16100,
+  "endMs": 16360,
+  "timestampMs": 16100,
+  "confidence": 0.995
+ },
+ {
+  "text": " Erbse",
+  "startMs": 16360,
+  "endMs": 16860,
+  "timestampMs": 16360,
+  "confidence": 0.908
+ },
+ {
+  "text": " in",
+  "startMs": 16860,
+  "endMs": 17020,
+  "timestampMs": 16860,
+  "confidence": 0.99
+ },
+ {
+  "text": " der",
+  "startMs": 17020,
+  "endMs": 17120,
+  "timestampMs": 17020,
+  "confidence": 0.997
+ },
+ {
+  "text": " Mitte",
+  "startMs": 17120,
+  "endMs": 17380,
+  "timestampMs": 17120,
+  "confidence": 0.999
+ },
+ {
+  "text": " eines",
+  "startMs": 17380,
+  "endMs": 17680,
+  "timestampMs": 17380,
+  "confidence": 0.997
+ },
+ {
+  "text": " Fußballstadions,",
+  "startMs": 17680,
+  "endMs": 18660,
+  "timestampMs": 17680,
+  "confidence": 0.93
+ },
+ {
+  "text": " dann",
+  "startMs": 19040,
+  "endMs": 19140,
+  "timestampMs": 19040,
+  "confidence": 0.969
+ },
+ {
+  "text": " wären",
+  "startMs": 19140,
+  "endMs": 19360,
+  "timestampMs": 19140,
+  "confidence": 0.996
+ },
+ {
+  "text": " die",
+  "startMs": 19360,
+  "endMs": 19560,
+  "timestampMs": 19360,
+  "confidence": 0.998
+ },
+ {
+  "text": " Elektronen",
+  "startMs": 19560,
+  "endMs": 20180,
+  "timestampMs": 19560,
+  "confidence": 0.99
+ },
+ {
+  "text": " irgendwo",
+  "startMs": 20180,
+  "endMs": 20640,
+  "timestampMs": 20180,
+  "confidence": 0.934
+ },
+ {
+  "text": " draußen",
+  "startMs": 20640,
+  "endMs": 21180,
+  "timestampMs": 20640,
+  "confidence": 0.995
+ },
+ {
+  "text": " auf",
+  "startMs": 21180,
+  "endMs": 21420,
+  "timestampMs": 21180,
+  "confidence": 0.998
+ },
+ {
+  "text": " den",
+  "startMs": 21420,
+  "endMs": 21560,
+  "timestampMs": 21420,
+  "confidence": 0.996
+ },
+ {
+  "text": " Rängen.",
+  "startMs": 21560,
+  "endMs": 21820,
+  "timestampMs": 21560,
+  "confidence": 0.987
+ },
+ {
+  "text": " Diese",
+  "startMs": 22220,
+  "endMs": 22440,
+  "timestampMs": 22220,
+  "confidence": 0.978
+ },
+ {
+  "text": " Elektronen",
+  "startMs": 22440,
+  "endMs": 23180,
+  "timestampMs": 22440,
+  "confidence": 0.998
+ },
+ {
+  "text": " sind",
+  "startMs": 23180,
+  "endMs": 23360,
+  "timestampMs": 23180,
+  "confidence": 0.999
+ },
+ {
+  "text": " negativ",
+  "startMs": 23360,
+  "endMs": 24000,
+  "timestampMs": 23360,
+  "confidence": 0.99
+ },
+ {
+  "text": " geladen.",
+  "startMs": 24000,
+  "endMs": 24460,
+  "timestampMs": 24000,
+  "confidence": 0.997
+ },
+ {
+  "text": " Und",
+  "startMs": 24820,
+  "endMs": 24920,
+  "timestampMs": 24820,
+  "confidence": 0.971
+ },
+ {
+  "text": " gleiche",
+  "startMs": 24920,
+  "endMs": 25360,
+  "timestampMs": 24920,
+  "confidence": 0.987
+ },
+ {
+  "text": " Ladungen",
+  "startMs": 25360,
+  "endMs": 25760,
+  "timestampMs": 25360,
+  "confidence": 0.981
+ },
+ {
+  "text": " stoßen",
+  "startMs": 25760,
+  "endMs": 26240,
+  "timestampMs": 25760,
+  "confidence": 0.997
+ },
+ {
+  "text": " sich",
+  "startMs": 26240,
+  "endMs": 26460,
+  "timestampMs": 26240,
+  "confidence": 0.999
+ },
+ {
+  "text": " ab.",
+  "startMs": 26460,
+  "endMs": 26660,
+  "timestampMs": 26460,
+  "confidence": 0.998
+ },
+ {
+  "text": " Näherst",
+  "startMs": 26660,
+  "endMs": 27400,
+  "timestampMs": 26660,
+  "confidence": 0.701
+ },
+ {
+  "text": " du",
+  "startMs": 27400,
+  "endMs": 27480,
+  "timestampMs": 27400,
+  "confidence": 0.937
+ },
+ {
+  "text": " deinen",
+  "startMs": 27480,
+  "endMs": 27660,
+  "timestampMs": 27480,
+  "confidence": 0.92
+ },
+ {
+  "text": " Finger",
+  "startMs": 27660,
+  "endMs": 27980,
+  "timestampMs": 27660,
+  "confidence": 0.995
+ },
+ {
+  "text": " einer",
+  "startMs": 27980,
+  "endMs": 28220,
+  "timestampMs": 27980,
+  "confidence": 0.994
+ },
+ {
+  "text": " Tischplatte,",
+  "startMs": 28220,
+  "endMs": 28860,
+  "timestampMs": 28220,
+  "confidence": 0.979
+ },
+ {
+  "text": " drücken",
+  "startMs": 29160,
+  "endMs": 29360,
+  "timestampMs": 29160,
+  "confidence": 0.988
+ },
+ {
+  "text": " die",
+  "startMs": 29360,
+  "endMs": 29560,
+  "timestampMs": 29360,
+  "confidence": 0.997
+ },
+ {
+  "text": " Elektronen",
+  "startMs": 29560,
+  "endMs": 30140,
+  "timestampMs": 29560,
+  "confidence": 0.989
+ },
+ {
+  "text": " deiner",
+  "startMs": 30140,
+  "endMs": 30440,
+  "timestampMs": 30140,
+  "confidence": 0.964
+ },
+ {
+  "text": " Haut",
+  "startMs": 30440,
+  "endMs": 30740,
+  "timestampMs": 30440,
+  "confidence": 0.997
+ },
+ {
+  "text": " gegen",
+  "startMs": 30740,
+  "endMs": 31140,
+  "timestampMs": 30740,
+  "confidence": 0.995
+ },
+ {
+  "text": " die",
+  "startMs": 31140,
+  "endMs": 31340,
+  "timestampMs": 31140,
+  "confidence": 0.997
+ },
+ {
+  "text": " Elektronen",
+  "startMs": 31340,
+  "endMs": 31980,
+  "timestampMs": 31340,
+  "confidence": 0.998
+ },
+ {
+  "text": " des",
+  "startMs": 31980,
+  "endMs": 32120,
+  "timestampMs": 31980,
+  "confidence": 0.998
+ },
+ {
+  "text": " Tisches.",
+  "startMs": 32120,
+  "endMs": 32460,
+  "timestampMs": 32120,
+  "confidence": 0.85
+ },
+ {
+  "text": " Je",
+  "startMs": 32920,
+  "endMs": 33060,
+  "timestampMs": 32920,
+  "confidence": 0.974
+ },
+ {
+  "text": " näher",
+  "startMs": 33060,
+  "endMs": 33340,
+  "timestampMs": 33060,
+  "confidence": 0.998
+ },
+ {
+  "text": " du",
+  "startMs": 33340,
+  "endMs": 33440,
+  "timestampMs": 33340,
+  "confidence": 0.994
+ },
+ {
+  "text": " kommst,",
+  "startMs": 33440,
+  "endMs": 33960,
+  "timestampMs": 33440,
+  "confidence": 0.997
+ },
+ {
+  "text": " desto",
+  "startMs": 34100,
+  "endMs": 34320,
+  "timestampMs": 34100,
+  "confidence": 0.999
+ },
+ {
+  "text": " stärker",
+  "startMs": 34320,
+  "endMs": 34780,
+  "timestampMs": 34320,
+  "confidence": 0.995
+ },
+ {
+  "text": " der",
+  "startMs": 34780,
+  "endMs": 34940,
+  "timestampMs": 34780,
+  "confidence": 0.996
+ },
+ {
+  "text": " Widerstand.",
+  "startMs": 34940,
+  "endMs": 35480,
+  "timestampMs": 34940,
+  "confidence": 0.994
+ },
+ {
+  "text": " Dazu",
+  "startMs": 35940,
+  "endMs": 36200,
+  "timestampMs": 35940,
+  "confidence": 0.951
+ },
+ {
+  "text": " kommt",
+  "startMs": 36200,
+  "endMs": 36560,
+  "timestampMs": 36200,
+  "confidence": 0.998
+ },
+ {
+  "text": " ein",
+  "startMs": 36560,
+  "endMs": 36740,
+  "timestampMs": 36560,
+  "confidence": 0.998
+ },
+ {
+  "text": " Gesetz",
+  "startMs": 36740,
+  "endMs": 37020,
+  "timestampMs": 36740,
+  "confidence": 0.991
+ },
+ {
+  "text": " der",
+  "startMs": 37020,
+  "endMs": 37280,
+  "timestampMs": 37020,
+  "confidence": 0.998
+ },
+ {
+  "text": " Quantenphysik.",
+  "startMs": 37280,
+  "endMs": 38060,
+  "timestampMs": 37280,
+  "confidence": 0.954
+ },
+ {
+  "text": " Zwei",
+  "startMs": 38480,
+  "endMs": 38740,
+  "timestampMs": 38480,
+  "confidence": 0.841
+ },
+ {
+  "text": " Elektronen",
+  "startMs": 38740,
+  "endMs": 39460,
+  "timestampMs": 38740,
+  "confidence": 0.995
+ },
+ {
+  "text": " können",
+  "startMs": 39460,
+  "endMs": 39720,
+  "timestampMs": 39460,
+  "confidence": 0.997
+ },
+ {
+  "text": " nie",
+  "startMs": 39720,
+  "endMs": 40120,
+  "timestampMs": 39720,
+  "confidence": 0.996
+ },
+ {
+  "text": " denselben",
+  "startMs": 40120,
+  "endMs": 40700,
+  "timestampMs": 40120,
+  "confidence": 0.92
+ },
+ {
+  "text": " Zustand",
+  "startMs": 40700,
+  "endMs": 41200,
+  "timestampMs": 40700,
+  "confidence": 0.998
+ },
+ {
+  "text": " einnehmen.",
+  "startMs": 41200,
+  "endMs": 41620,
+  "timestampMs": 41200,
+  "confidence": 0.989
+ },
+ {
+  "text": " Es",
+  "startMs": 41940,
+  "endMs": 42040,
+  "timestampMs": 41940,
+  "confidence": 0.994
+ },
+ {
+  "text": " bleibt",
+  "startMs": 42040,
+  "endMs": 42260,
+  "timestampMs": 42040,
+  "confidence": 0.999
+ },
+ {
+  "text": " also",
+  "startMs": 42260,
+  "endMs": 42600,
+  "timestampMs": 42260,
+  "confidence": 0.994
+ },
+ {
+  "text": " immer",
+  "startMs": 42600,
+  "endMs": 42920,
+  "timestampMs": 42600,
+  "confidence": 0.995
+ },
+ {
+  "text": " ein",
+  "startMs": 42920,
+  "endMs": 43200,
+  "timestampMs": 42920,
+  "confidence": 0.992
+ },
+ {
+  "text": " winziger",
+  "startMs": 43200,
+  "endMs": 43780,
+  "timestampMs": 43200,
+  "confidence": 0.996
+ },
+ {
+  "text": " Abstand.",
+  "startMs": 43780,
+  "endMs": 44200,
+  "timestampMs": 43780,
+  "confidence": 0.996
+ },
+ {
+  "text": " Kleiner",
+  "startMs": 44540,
+  "endMs": 44980,
+  "timestampMs": 44540,
+  "confidence": 0.946
+ },
+ {
+  "text": " als",
+  "startMs": 44980,
+  "endMs": 45200,
+  "timestampMs": 44980,
+  "confidence": 0.995
+ },
+ {
+  "text": " ein",
+  "startMs": 45200,
+  "endMs": 45440,
+  "timestampMs": 45200,
+  "confidence": 0.885
+ },
+ {
+  "text": " Millionstel",
+  "startMs": 45440,
+  "endMs": 46200,
+  "timestampMs": 45440,
+  "confidence": 0.622
+ },
+ {
+  "text": " Millimeter.",
+  "startMs": 46200,
+  "endMs": 46800,
+  "timestampMs": 46200,
+  "confidence": 0.834
+ },
+ {
+  "text": " Was",
+  "startMs": 47220,
+  "endMs": 47340,
+  "timestampMs": 47220,
+  "confidence": 0.986
+ },
+ {
+  "text": " du",
+  "startMs": 47340,
+  "endMs": 47560,
+  "timestampMs": 47340,
+  "confidence": 0.988
+ },
+ {
+  "text": " als",
+  "startMs": 47560,
+  "endMs": 47760,
+  "timestampMs": 47560,
+  "confidence": 0.998
+ },
+ {
+  "text": " Berührung",
+  "startMs": 47760,
+  "endMs": 48320,
+  "timestampMs": 47760,
+  "confidence": 0.99
+ },
+ {
+  "text": " spürst,",
+  "startMs": 48320,
+  "endMs": 48840,
+  "timestampMs": 48320,
+  "confidence": 0.997
+ },
+ {
+  "text": " ist",
+  "startMs": 48940,
+  "endMs": 49080,
+  "timestampMs": 48940,
+  "confidence": 0.997
+ },
+ {
+  "text": " genau",
+  "startMs": 49080,
+  "endMs": 49520,
+  "timestampMs": 49080,
+  "confidence": 0.998
+ },
+ {
+  "text": " diese",
+  "startMs": 49520,
+  "endMs": 49880,
+  "timestampMs": 49520,
+  "confidence": 0.991
+ },
+ {
+  "text": " Abstoßung.",
+  "startMs": 49880,
+  "endMs": 50580,
+  "timestampMs": 49880,
+  "confidence": 0.743
+ },
+ {
+  "text": " Deine",
+  "startMs": 50880,
+  "endMs": 51100,
+  "timestampMs": 50880,
+  "confidence": 0.995
+ },
+ {
+  "text": " Nerven",
+  "startMs": 51100,
+  "endMs": 51500,
+  "timestampMs": 51100,
+  "confidence": 0.998
+ },
+ {
+  "text": " messen",
+  "startMs": 51500,
+  "endMs": 51980,
+  "timestampMs": 51500,
+  "confidence": 0.995
+ },
+ {
+  "text": " den",
+  "startMs": 51980,
+  "endMs": 52100,
+  "timestampMs": 51980,
+  "confidence": 0.998
+ },
+ {
+  "text": " Druck",
+  "startMs": 52100,
+  "endMs": 52380,
+  "timestampMs": 52100,
+  "confidence": 0.998
+ },
+ {
+  "text": " und",
+  "startMs": 52380,
+  "endMs": 52760,
+  "timestampMs": 52380,
+  "confidence": 0.578
+ },
+ {
+  "text": " dein",
+  "startMs": 52760,
+  "endMs": 52920,
+  "timestampMs": 52760,
+  "confidence": 0.991
+ },
+ {
+  "text": " Gehirn",
+  "startMs": 52920,
+  "endMs": 53340,
+  "timestampMs": 52920,
+  "confidence": 0.998
+ },
+ {
+  "text": " macht",
+  "startMs": 53340,
+  "endMs": 53500,
+  "timestampMs": 53340,
+  "confidence": 0.997
+ },
+ {
+  "text": " daraus",
+  "startMs": 53500,
+  "endMs": 53840,
+  "timestampMs": 53500,
+  "confidence": 0.998
+ },
+ {
+  "text": " ein",
+  "startMs": 53840,
+  "endMs": 54000,
+  "timestampMs": 53840,
+  "confidence": 0.978
+ },
+ {
+  "text": " Gefühl.",
+  "startMs": 54000,
+  "endMs": 54300,
+  "timestampMs": 54000,
+  "confidence": 0.985
+ },
+ {
+  "text": " Fest,",
+  "startMs": 54300,
+  "endMs": 54980,
+  "timestampMs": 54300,
+  "confidence": 0.148
+ },
+ {
+  "text": " glatt,",
+  "startMs": 55560,
+  "endMs": 55880,
+  "timestampMs": 55560,
+  "confidence": 0.993
+ },
+ {
+  "text": " warm.",
+  "startMs": 56300,
+  "endMs": 56660,
+  "timestampMs": 56300,
+  "confidence": 0.988
+ },
+ {
+  "text": " Streng",
+  "startMs": 57200,
+  "endMs": 57480,
+  "timestampMs": 57200,
+  "confidence": 0.754
+ },
+ {
+  "text": " genommen",
+  "startMs": 57480,
+  "endMs": 57700,
+  "timestampMs": 57480,
+  "confidence": 0.892
+ },
+ {
+  "text": " schwebst",
+  "startMs": 57700,
+  "endMs": 58420,
+  "timestampMs": 57700,
+  "confidence": 0.908
+ },
+ {
+  "text": " du",
+  "startMs": 58420,
+  "endMs": 58600,
+  "timestampMs": 58420,
+  "confidence": 0.952
+ },
+ {
+  "text": " also",
+  "startMs": 58600,
+  "endMs": 58760,
+  "timestampMs": 58600,
+  "confidence": 0.976
+ },
+ {
+  "text": " gerade.",
+  "startMs": 58760,
+  "endMs": 59160,
+  "timestampMs": 58760,
+  "confidence": 0.995
+ },
+ {
+  "text": " Über",
+  "startMs": 59640,
+  "endMs": 59760,
+  "timestampMs": 59640,
+  "confidence": 0.991
+ },
+ {
+  "text": " deinem",
+  "startMs": 59760,
+  "endMs": 60060,
+  "timestampMs": 59760,
+  "confidence": 0.973
+ },
+ {
+  "text": " Stuhl,",
+  "startMs": 60060,
+  "endMs": 60600,
+  "timestampMs": 60060,
+  "confidence": 0.994
+ },
+ {
+  "text": " über",
+  "startMs": 60820,
+  "endMs": 60980,
+  "timestampMs": 60820,
+  "confidence": 0.983
+ },
+ {
+  "text": " dem",
+  "startMs": 60980,
+  "endMs": 61120,
+  "timestampMs": 60980,
+  "confidence": 0.739
+ },
+ {
+  "text": " Boden,",
+  "startMs": 61120,
+  "endMs": 61500,
+  "timestampMs": 61120,
+  "confidence": 0.998
+ },
+ {
+  "text": " über",
+  "startMs": 62040,
+  "endMs": 62240,
+  "timestampMs": 62040,
+  "confidence": 0.991
+ },
+ {
+  "text": " allem.",
+  "startMs": 62240,
+  "endMs": 62620,
+  "timestampMs": 62240,
+  "confidence": 0.868
+ },
+ {
+  "text": " Folge",
+  "startMs": 63120,
+  "endMs": 63460,
+  "timestampMs": 63120,
+  "confidence": 0.991
+ },
+ {
+  "text": " für",
+  "startMs": 63460,
+  "endMs": 63760,
+  "timestampMs": 63460,
+  "confidence": 0.978
+ },
+ {
+  "text": " mehr",
+  "startMs": 63760,
+  "endMs": 64040,
+  "timestampMs": 63760,
+  "confidence": 0.997
+ },
+ {
+  "text": " Wissen,",
+  "startMs": 64040,
+  "endMs": 64440,
+  "timestampMs": 64040,
+  "confidence": 0.946
+ },
+ {
+  "text": " das",
+  "startMs": 64620,
+  "endMs": 64720,
+  "timestampMs": 64620,
+  "confidence": 0.855
+ },
+ {
+  "text": " deinen",
+  "startMs": 64720,
+  "endMs": 65000,
+  "timestampMs": 64720,
+  "confidence": 0.774
+ },
+ {
+  "text": " Kopf",
+  "startMs": 65000,
+  "endMs": 65360,
+  "timestampMs": 65000,
+  "confidence": 0.996
+ },
+ {
+  "text": " verdreht.",
+  "startMs": 65360,
+  "endMs": 65920,
+  "timestampMs": 65360,
+  "confidence": 0.978
+ }
+]
